@@ -181,10 +181,18 @@ class LSTM_PM(nn.Module):
         heatmap = self.convnet3(hide1)
         return heatmap, cell1, hide1
 
-    def forward(self, images, center_map):
+    def forward(self, images, center_map):  
+        '''
+
+        :param images:      Tensor      T * 3 * w(368) * h(368)
+        :param center_map:  Tensor      1 * 368 * 368
+        :return:
+        heatmaps            list        T * (class+1) * 45 * 45
+        '''  
         image = images[0, :, :, :]
         image = image.unsqueeze_(0)
-
+        center_map = center_map.unsqueeze_(0)
+        
         heat_maps = []
         heatmap, cell, hide = self.stage1(image, center_map)  # initial heat map
         heat_maps.append(heatmap)
@@ -197,4 +205,11 @@ class LSTM_PM(nn.Module):
             heat_maps.append(heatmap)
         return heat_maps
 
+## test case
+#net = LSTM_PM(T=4)
+#a = torch.randn(4, 3, 368, 368)
+#c = torch.randn(1, 368, 368)
+#maps = net(a, c)
+#for m in maps:
+#    print m.shape
 
