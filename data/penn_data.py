@@ -170,5 +170,7 @@ transform1 = transforms.Compose([
     ]
 )
 
-data = Penn_Data(data_dir='/Users/mahaoyu/UCI/howiema/howiema/Penn_Action/', transform=transform1)
-images, label_map, center_map = data[1]
+
+# test case
+#data = Penn_Data(data_dir='Penn_Action/', transform=transform1)
+#images, label_map, center_map = data[1]
