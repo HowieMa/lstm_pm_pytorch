@@ -3,6 +3,7 @@ only used for penn_action datasets
 '''
 
 import os
+import cv2
 import torch
 import numpy as np
 from torch.utils.data import Dataset
@@ -40,26 +41,23 @@ class Penn_Data(Dataset):
 
         :param idx:
         :return:
-            images: Tensor
+            images:     Tensor    seqtrain * 3 * width * height
             label_map:  Tensor    46 * 46 * (class+1) * seqtrain
             center_map: Tensor    1 * 368 * 368
         '''
         frames = self.frames_data[idx]
         data = np.load(os.path.join(self.data_dir, frames)).item()
 
-        images, label_map, center_map = self.transformation_penn(data, boxsize=self.input_w, seqTrain=5, parts_num=13,
+        images, label_map, center_map = self.transformation_penn(data, boxsize=self.input_w, parts_num=13,
                                                                train=self.train)
 
-        labelMap = torch.from_numpy(label_map)
-        centerMap = torch.from_numpy(center_map)
 
-        centerMap = centerMap.unsqueeze_(0)
+        center_map = center_map.unsqueeze_(0)
 
-        return images, labelMap, centerMap
+        return images, label_map, center_map
 
-    def transformation_penn(self, data, boxsize=368, parts_num=13, seqTrain=5, train=True):
+    def transformation_penn(self, data, boxsize=368, parts_num=13, train=True):
         '''
-
         :param data:
         :param boxsize:
         :param parts_num:
@@ -69,24 +67,19 @@ class Penn_Data(Dataset):
         images tensor seq
         '''
         nframes = data['nframes']                           # 151
-        framespath = data['framepath']  #
-        framespath = '/Users/mahaoyu/UCI/howiema/howiema/'+framespath
-
+        framespath = data['framepath']
         dim = data['dimensions']                            # [360, 480]
         x = data['x']                                       # 151 * 13
         y = data['y']                                       # 151 * 13
         visibility = data['visibility']                     # 151 * 13
 
-        start_index = np.random.randint(0, nframes - 1 - seqTrain + 1)  #
+        start_index = np.random.randint(0, nframes - 1 - self.seqTrain + 1)  #
 
-        #images = np.uint8(np.zeros((seqTrain, 3, dim[0], dim[1])))  #
+        images = torch.zeros(self.seqTrain, 3, dim[0], dim[1])  # tensor seqTrain * 3 * 368 * 368
+        label = np.zeros((3, parts_num + 1, self.seqTrain))     # numpy 3
+        bbox = np.zeros((self.seqTrain, 4))  # seqTrain * ()    # numpy
 
-        images = torch.zeros(seqTrain, 3, dim[0], dim[1])  # tensor seqTrain * 3 * 368 * 368
-
-        label = np.zeros((3, parts_num + 1, seqTrain))     # numpy 3
-        bbox = np.zeros((seqTrain, 4))  # seqTrain * ()    # numpy
-
-        for i in range(seqTrain):
+        for i in range(self.seqTrain):
             # read image
             img_path = os.path.join(framespath,'%06d' % (start_index + i + 1) + '.jpg')
             img = Image.open(img_path)  # Image
@@ -107,23 +100,28 @@ class Penn_Data(Dataset):
             label[2, -1, :] = np.floor((label[2, 0, :] + label[2, 1, :] + label[2, 2, :]) / 3.0)
 
         # make the joints not in the figure vis=-1(Do not produce label)
-        for i in range(seqTrain):  # for each image
+        for i in range(self.seqTrain):  # for each image
             for part in range(0, parts_num + 1):  # for each part
                 if self.isNotOnPlane(label[0, part, i], label[1, part, i], dim[1], dim[0]):
                     label[2, part, i] = -1
 
+        # build data set--------
         label_map = self.genLabelMap(label, boxsize=368, stride=8, sigma=7)  # 46 * 46 * (13 + 1) * seq
 
-
         center_map = self.genCenterMap(size_w=boxsize, size_h=boxsize, sigma=21, x=boxsize / 2.0, y=boxsize / 2.0)
-        center_map = transforms.ToTensor()(center_map)
-        center_map = center_map.unsqueeze_(0)
-
-
-
+        center_map = torch.from_numpy(center_map)
         return images, label_map, center_map
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
+        '''
+        generate Gaussian heat map
+        :param x: center point
+        :param y: center point
+        :param sigma:
+        :param size_w:
+        :param size_h:
+        :return: numpy w * h
+        '''
         gridy, gridx = np.mgrid[0:size_h, 0:size_w]
         D2 = (gridx - x) ** 2 + (gridy - y) ** 2
         return np.exp(-D2 / 2.0 / sigma / sigma)  # numpy 2d
@@ -132,36 +130,38 @@ class Penn_Data(Dataset):
         notOn = x < 0.001 or y < 0.001 or x > width or y > height
         return notOn
 
-    def genLabelMap(self, label, boxsize, stride, sigma=7):
+    def genLabelMap(self, label, boxsize, stride, sigma):
         '''
-        :param label: 3 * parts_num * seqTrain
-        :param boxsize:368
-        :param stride: 8
-        :param sigma:7
+        generate label heat map for each part
+        :param label:       3 * parts_num * seqTrain
+        :param boxsize:     368
+        :param stride:      8
+        :param sigma:       7
         :return:
-        label_size * label_size * (parts_num + 1 ) * seqtrain
-        46 * 46 * 14 * 5
+        seqtrain * (parts_num + 1 ) * label_size * label_size
+        5 * 14 * 46 * 46
         '''
-        label_size = boxsize / stride  # 368 / 8 = 46
-        label_map = np.zeros((label_size, label_size, self.parts_num + 1, self.seqTrain))
+        label_size = boxsize / stride               # 368 / 8 = 46
+        label_map = torch.zeros(self.seqTrain, self.parts_num + 1, label_size, label_size)
 
-        for k in range(self.seqTrain):  # for each frame
-            for i in range(self.parts_num):  # for each parts
-                if label[2, i, k] >= 0:  # if exists
+        #
+        for k in range(self.seqTrain):              # for each frame
+            for i in range(self.parts_num):         # for each parts
+                if label[2, i, k] >= 0:             # if exists
                     cx, cy = label[0, i, k], label[1, i, k]  # get the center
-                    heat_map = self.genCenterMap(x=cx, y=cy, sigma=7, size_w=label_size, size_h=label_size)  # build heat map of this part
-                else:
+                    heat_map = self.genCenterMap(x=cx, y=cy, sigma=sigma, size_w=label_size, size_h=label_size)
+                    # build heat map of this part
+                else:                               # not exists
                     heat_map = np.zeros((label_size, label_size))
+                label_map[k, i, :, :] = torch.from_numpy(np.transpose(heat_map))  #
 
-                label_map[:, :, i, k] = np.transpose(heat_map)  #
-
+            # build background
             background = np.ones((label_size, label_size))  #
-
             for m in range(label_size):
                 for n in range(label_size):
-                    maxV = max(label_map[m, n, :, k])
+                    maxV = max(label_map[k, :, m, n])
                     background[m, n] = max(1 - maxV, 0)
-            label_map[:, :, self.parts_num, k] = background
+            label_map[k, self.parts_num, :, :] = torch.from_numpy(background)
 
         return label_map
 
