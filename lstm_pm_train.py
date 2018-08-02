@@ -31,7 +31,7 @@ if not os.path.exists(args.save_dir):
 transform = transforms.Compose([transforms.ToTensor()])
 
 
-data_dir = 'dataset/lstm_pm_pytorch/frames/001'
+data_dir = 'dataset/frames/001'
 label_dir = 'dataset/label/001'
 
 dataset = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir, temporal=temporal)
@@ -49,10 +49,9 @@ def train():
     criterion = nn.MSELoss()
     net.train()
     for epoch in range(args.begin_epoch, args.epochs + 1):
-        print 'epoch...' + str(epoch)
+        print 'epoch............' + str(epoch)
 
         for idx, (images, label_map, center_map) in enumerate(train_dataset):
-
 
             images = Variable(images.cuda() if args.cuda else images)
             label_map = Variable(label_map.cuda() if args.cuda else label_map)
@@ -62,13 +61,16 @@ def train():
             optimizer.zero_grad()
 
             predict_heatmaps = net(images, center_map)  # list
-
+            
+            ## *******************************************
+            ##for maps in predict_heatmaps:
+                ## 
             loss = 0
             ## 
 
             loss = criterion(predict_heatmaps, label_map)
             loss.backward()
-            ##
+            ## *******************************************
 
             optimizer.step()
 
