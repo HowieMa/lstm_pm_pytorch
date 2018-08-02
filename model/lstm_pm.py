@@ -198,7 +198,7 @@ class LSTM_PM(nn.Module):
 
         #
         for i in range(1, self.T):
-            image = images[:, (self.T * i):(self.T*i + 3), :, :]
+            image = images[:, (3 * i):(3 * i + 3), :, :]
             heatmap, cell, hide = self.stage2(image, center_map, heatmap, cell, hide)
             heat_maps.append(heatmap)
         return heat_maps
