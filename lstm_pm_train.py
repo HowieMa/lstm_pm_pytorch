@@ -63,12 +63,13 @@ def train():
             predict_heatmaps = net(images, center_map)  # list
             
             ## *******************************************
-            ##for maps in predict_heatmaps:
-                ## 
-            loss = 0
-            ## 
 
-            loss = criterion(predict_heatmaps, label_map)
+            loss = 0
+            for i in range(len(predict_heatmaps)):
+                predict = predict_heatmaps[i]
+                target = label_map[:,i, :, :, :]
+                loss += criterion(predict, target)
+
             loss.backward()
             ## *******************************************
 
