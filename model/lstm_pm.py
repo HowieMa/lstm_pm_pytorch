@@ -189,18 +189,16 @@ class LSTM_PM(nn.Module):
         :return:
         heatmaps            list        T * (class+1) * 45 * 45
         '''  
-        image = images[0, :, :, :]
-        image = image.unsqueeze_(0)
-        center_map = center_map.unsqueeze_(0)
-        
+        image = images[:, 0:3, :, :]
+        print image.shape
+
         heat_maps = []
         heatmap, cell, hide = self.stage1(image, center_map)  # initial heat map
         heat_maps.append(heatmap)
 
         #
         for i in range(1, self.T):
-            image = images[i, :, :, :]
-            image = image.unsqueeze_(0)
+            image = images[:, (self.T * i):(self.T*i + 3), :, :]
             heatmap, cell, hide = self.stage2(image, center_map, heatmap, cell, hide)
             heat_maps.append(heatmap)
         return heat_maps

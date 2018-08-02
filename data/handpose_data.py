@@ -41,7 +41,7 @@ class UCIHandPoseDataset(Dataset):
         img_num = len(imgs)
 
         # initialize
-        images = torch.zeros(self.temporal, 3, self.width, self.height)
+        images = torch.zeros(self.temporal * 3, self.width, self.height)
         label_maps = torch.zeros(self.temporal, self.joints + 1, label_size, label_size)
 
         start_index = np.random.randint(0, img_num - self.temporal)  #
@@ -54,7 +54,7 @@ class UCIHandPoseDataset(Dataset):
             ratio_y = self.height / float(h)                    # 368 / 256 = 1.4375
 
             im.resize([self.width, self.height, 3])                # unit8      368 * 368 * 3
-            images[i, :, :, :] = transforms.ToTensor()(im)         # Tensor     3 * 368 * 368
+            images[(i*3):(i*3+3), :, :] = transforms.ToTensor()(im)  # Tensor     3 * 368 * 368
             label = labels[img.split('.')[0][1:]]                  # list       21 * 2
             label_maps[i, :, :, :] = self.genLabelMap(label, label_size=label_size,
                                                       joints=self.joints, ratio_x=ratio_x, ratio_y=ratio_y)
@@ -63,7 +63,9 @@ class UCIHandPoseDataset(Dataset):
                                        size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
-        return images, label_maps, center_map
+  
+        return images.float(), label_maps.float(), center_map.float()
+
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
         '''
