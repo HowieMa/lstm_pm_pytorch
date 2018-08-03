@@ -116,42 +116,42 @@ class UCIHandPoseDataset(Dataset):
 
 
 
-# test case
-<<<<<<< HEAD
-# data = UCIHandPoseDataset(data_dir='/Users/mahaoyu/UCI/HandsPoseDataset/Hands/001',
-#                          label_dir='/Users/mahaoyu/UCI/HandsPoseDataset/hands_label/001', temporal=10)
+# # test case
+# <<<<<<< HEAD
+# # data = UCIHandPoseDataset(data_dir='/Users/mahaoyu/UCI/HandsPoseDataset/Hands/001',
+# #                          label_dir='/Users/mahaoyu/UCI/HandsPoseDataset/hands_label/001', temporal=10)
 
-# images, label_maps, center_map = data[2]
+# # images, label_maps, center_map = data[2]
+# # print images.shape
+# # print label_maps.shape
+# # print center_map.shape
+
+
+# # maps = label_maps[1,1,:,:]      #   Tensor  45 * 45  
+# # a = maps.numpy()                #   numpy   45 * 45 
+
+    
+# # import scipy.misc
+# # scipy.misc.imsave('outfile.jpg', a)
+
+# data_dir = '../dataset/frames/001'
+# label_dir = '../dataset/label/001'
+
+# data = UCIHandPoseDataset(data_dir=data_dir,
+#                           label_dir=label_dir, temporal=2)
+
+# images, label_maps, center_map = data[1]
 # print images.shape
 # print label_maps.shape
 # print center_map.shape
 
 
-# maps = label_maps[1,1,:,:]      #   Tensor  45 * 45  
-# a = maps.numpy()                #   numpy   45 * 45 
-
-    
-# import scipy.misc
-# scipy.misc.imsave('outfile.jpg', a)
-=======
-data_dir = '../dataset/frames/001'
-label_dir = '../dataset/label/001'
-
-data = UCIHandPoseDataset(data_dir=data_dir,
-                          label_dir=label_dir, temporal=2)
-
-images, label_maps, center_map = data[1]
-print images.shape
-print label_maps.shape
-print center_map.shape
-
-
-maps = label_maps[1,1,:,:]
-a = maps.numpy()
-c = center_map.numpy()
+# maps = label_maps[1,1,:,:]
+# a = maps.numpy()
+# c = center_map.numpy()
     
     
     
     
     
->>>>>>> 5e4a62bbe230d961eacfecd9a0723dea76ce777d
+# >>>>>>> 5e4a62bbe230d961eacfecd9a0723dea76ce777d
