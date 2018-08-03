@@ -90,14 +90,16 @@ class UCIHandPoseDataset(Dataset):
         :param joints:          int             21
         :return: heatmap        Tensor          (joints+1) * boxsize/stride * boxsize/stride
         '''
-
+        print label_size
         label_maps = torch.zeros(joints + 1, label_size, label_size)  # Tensor
 
         for i in range(len(label)):
             lbl = label[i]                  # [x, y]
-            x = lbl[0] * ratio_x            # modify the label
-            y = lbl[1] * ratio_y
+            x = lbl[0] * ratio_x /8.0           # modify the label
+            y = lbl[1] * ratio_y /8.0
+
             heatmap = self.genCenterMap(x, y, sigma=7, size_w=label_size, size_h=label_size)
+
             label_maps[i, :, :] = torch.from_numpy(np.transpose(heatmap))
 
         label_maps[joints, :, :] = torch.from_numpy(np.transpose(heatmap))  # !!!
@@ -107,12 +109,23 @@ class UCIHandPoseDataset(Dataset):
 
 
 # test case
-#data = UCIHandPoseDataset(data_dir='/Users/mahaoyu/UCI/HandsPoseDataset/Hands/001',
-#                          label_dir='/Users/mahaoyu/UCI/HandsPoseDataset/hands_label/001', temporal=10)
+data_dir = '../dataset/frames/001'
+label_dir = '../dataset/label/001'
 
-#images, label_maps, center_map = data[2]
-#print images.shape
-#print label_maps.shape
-#print center_map.shape
+data = UCIHandPoseDataset(data_dir=data_dir,
+                          label_dir=label_dir, temporal=2)
+
+images, label_maps, center_map = data[1]
+print images.shape
+print label_maps.shape
+print center_map.shape
 
 
+maps = label_maps[1,1,:,:]
+a = maps.numpy()
+c = center_map.numpy()
+    
+    
+    
+    
+    
