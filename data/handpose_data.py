@@ -8,7 +8,7 @@ import cv2
 
 
 class UCIHandPoseDataset(Dataset):
-    def __init__(self, data_dir, label_dir, temporal = 7, transform = None, ):
+    def __init__(self, data_dir, label_dir, temporal = 7, transform = None, sigma=7):
         self.height = 368
         self.width = 368
 
@@ -18,6 +18,7 @@ class UCIHandPoseDataset(Dataset):
         self.temporal = temporal
         self.transform = transform
         self.joints = 21                    # 21 heat maps
+        self.sigma=sigma
 
     def __len__(self):
         return len(self.seqs)
@@ -77,6 +78,7 @@ class UCIHandPoseDataset(Dataset):
         :param size_h: image height
         :return:            numpy           w * h
         '''
+        
         gridy, gridx = np.mgrid[0:size_h, 0:size_w]
         D2 = (gridx - x) ** 2 + (gridy - y) ** 2
         return np.exp(-D2 / 2.0 / sigma / sigma)  # numpy 2d
@@ -95,11 +97,17 @@ class UCIHandPoseDataset(Dataset):
 
         for i in range(len(label)):
             lbl = label[i]                  # [x, y]
+<<<<<<< HEAD
+            x = lbl[0] * ratio_x/8.0         # modify the label
+            y = lbl[1] * ratio_y/8.0
+            heatmap = self.genCenterMap(y,x, sigma=self.sigma, size_w=label_size, size_h=label_size)
+=======
             x = lbl[0] * ratio_x /8.0           # modify the label
             y = lbl[1] * ratio_y /8.0
 
             heatmap = self.genCenterMap(x, y, sigma=7, size_w=label_size, size_h=label_size)
 
+>>>>>>> 5e4a62bbe230d961eacfecd9a0723dea76ce777d
             label_maps[i, :, :] = torch.from_numpy(np.transpose(heatmap))
 
         label_maps[joints, :, :] = torch.from_numpy(np.transpose(heatmap))  # !!!
@@ -109,6 +117,23 @@ class UCIHandPoseDataset(Dataset):
 
 
 # test case
+<<<<<<< HEAD
+# data = UCIHandPoseDataset(data_dir='/Users/mahaoyu/UCI/HandsPoseDataset/Hands/001',
+#                          label_dir='/Users/mahaoyu/UCI/HandsPoseDataset/hands_label/001', temporal=10)
+
+# images, label_maps, center_map = data[2]
+# print images.shape
+# print label_maps.shape
+# print center_map.shape
+
+
+# maps = label_maps[1,1,:,:]      #   Tensor  45 * 45  
+# a = maps.numpy()                #   numpy   45 * 45 
+
+    
+# import scipy.misc
+# scipy.misc.imsave('outfile.jpg', a)
+=======
 data_dir = '../dataset/frames/001'
 label_dir = '../dataset/label/001'
 
@@ -129,3 +154,4 @@ c = center_map.numpy()
     
     
     
+>>>>>>> 5e4a62bbe230d961eacfecd9a0723dea76ce777d
