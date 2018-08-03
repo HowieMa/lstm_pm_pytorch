@@ -4,8 +4,8 @@ import torch
 from torch.utils.data import Dataset
 import numpy as np
 import json
-import cv2
-
+from PIL import Image
+from IPython.core.debugger import set_trace
 
 class UCIHandPoseDataset(Dataset):
     def __init__(self, data_dir, label_dir, temporal = 7, transform = None, sigma=7):
@@ -49,12 +49,13 @@ class UCIHandPoseDataset(Dataset):
 
         for i in range(self.temporal):                          # get temporal images
             img = imgs[i + start_index]                         # L0005.jpg
-            im = cv2.imread(image_path + '/' + img)             # read image
-            w, h, c = im.shape                                  # 256 * 256 * 3
+            im = Image.open(image_path + '/' + img)             # read image
+            #set_trace()
+            w, h, c = np.asarray(im).shape                                  # 256 * 256 * 3
             ratio_x = self.width / float(w)
             ratio_y = self.height / float(h)                    # 368 / 256 = 1.4375
 
-            im.resize([self.width, self.height, 3])                # unit8      368 * 368 * 3
+            im = im.resize((self.width, self.height))                # unit8      368 * 368 * 3
             images[(i*3):(i*3+3), :, :] = transforms.ToTensor()(im)  # Tensor     3 * 368 * 368
             label = labels[img.split('.')[0][1:]]                  # list       21 * 2
             label_maps[i, :, :, :] = self.genLabelMap(label, label_size=label_size,
@@ -92,7 +93,7 @@ class UCIHandPoseDataset(Dataset):
         :param joints:          int             21
         :return: heatmap        Tensor          (joints+1) * boxsize/stride * boxsize/stride
         '''
-        print label_size
+        #print label_size
         label_maps = torch.zeros(joints + 1, label_size, label_size)  # Tensor
 
         for i in range(len(label)):
