@@ -44,7 +44,7 @@ class UCIHandPoseDataset(Dataset):
         images = torch.zeros(self.temporal * 3, self.width, self.height)
         label_maps = torch.zeros(self.temporal, self.joints + 1, label_size, label_size)
 
-        start_index = np.random.randint(0, img_num - self.temporal)  #
+        start_index = np.random.randint(0, img_num - self.temporal + 1)  #
 
         for i in range(self.temporal):                          # get temporal images
             img = imgs[i + start_index]                         # L0005.jpg
