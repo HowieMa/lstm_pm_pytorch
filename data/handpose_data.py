@@ -97,17 +97,10 @@ class UCIHandPoseDataset(Dataset):
 
         for i in range(len(label)):
             lbl = label[i]                  # [x, y]
-<<<<<<< HEAD
             x = lbl[0] * ratio_x/8.0         # modify the label
             y = lbl[1] * ratio_y/8.0
             heatmap = self.genCenterMap(y,x, sigma=self.sigma, size_w=label_size, size_h=label_size)
-=======
-            x = lbl[0] * ratio_x /8.0           # modify the label
-            y = lbl[1] * ratio_y /8.0
 
-            heatmap = self.genCenterMap(x, y, sigma=7, size_w=label_size, size_h=label_size)
-
->>>>>>> 5e4a62bbe230d961eacfecd9a0723dea76ce777d
             label_maps[i, :, :] = torch.from_numpy(np.transpose(heatmap))
 
         label_maps[joints, :, :] = torch.from_numpy(np.transpose(heatmap))  # !!!
