@@ -15,6 +15,10 @@ I will update this repo recently.
 * PyTorch 0.2
 * torchvision 0.1.9
 
+## Train
+python lstm_pm_train.py
+
+
 ## References
 [LSTM Pose Machines](https://arxiv.org/pdf/1712.06316.pdf)
 
