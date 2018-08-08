@@ -71,15 +71,16 @@ class UCIHandPoseDataset(Dataset):
             ratio_y = self.height / float(h)    # 368 / 256 = 1.4375
             im = im.resize((self.width, self.height))                       # unit8      weight 368 * height 368 * 3
             images[(i * 3):(i * 3 + 3), :, :] = transforms.ToTensor()(im)   # 3D Tensor  3 * height 368 * weight 368
+            # ToTensor function will normalize data
 
             # get label map
             label = labels[img.split('/')[-1][1:5]]         # 0005  list       21 * 2
             lbl = self.genLabelMap(label, label_size=label_size, joints=self.joints, ratio_x=ratio_x, ratio_y=ratio_y)
-            label_maps[i, :, :, :] = transforms.ToTensor()(lbl)
+            label_maps[i, :, :, :] = torch.from_numpy(lbl)
 
         # generate the Gaussian heat map
         center_map = self.genCenterMap(x=self.width / 2.0, y=self.height / 2.0, sigma=21,
-                                       size_w=self.width, size_h=self.height)
+                                       size_w=self.widith, size_h=self.height)
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
 
@@ -110,7 +111,7 @@ class UCIHandPoseDataset(Dataset):
         :return:  heatmap           numpy           (joints+1) * boxsize/stride * boxsize/stride
         """
         # initialize
-        label_maps = np.zeros((label_size, label_size, joints + 1))
+        label_maps = np.zeros((joints + 1, label_size, label_size ))
         background = np.zeros((label_size, label_size))
 
         # each joint
@@ -120,10 +121,10 @@ class UCIHandPoseDataset(Dataset):
             y = lbl[1] * ratio_y / 8.0
             heatmap = self.genCenterMap(x, y, sigma=self.sigma, size_w=label_size, size_h=label_size)  # numpy
             background += heatmap               # numpy
-            label_maps[:, :, i] = heatmap
+            label_maps[i, :, :] = heatmap
 
         # back ground
-        label_maps[:, :, joints] = 1 - background
+        label_maps[joints, :, :] = 1 - background
         return label_maps  # numpy           label_size * label_size * (joints + 1)
 
 
