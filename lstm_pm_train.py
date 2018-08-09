@@ -15,9 +15,9 @@ import os
 import scipy.misc
 
 # hyper parameter
-temporal = 4
-data_dir = '..dataset/frames/001'
-label_dir = '..dataset/label/001'
+temporal = 5
+data_dir = '..dataset/frames/train_data'
+label_dir = '..dataset/label/train_label'
 predict_dir = ''
 loss_dir = ''
 
@@ -39,7 +39,7 @@ transform = transforms.Compose([transforms.ToTensor()])
 
 # Build dataset
 dataset = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir, temporal=temporal)
-print 'Dataset total number of images sequence is ----' + len(dataset)
+print 'Dataset total number of images sequence is ----' + str(len(dataset))
 
 # Data Loader
 train_dataset = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
@@ -86,14 +86,14 @@ def train():
             total_loss.backward()
             optimizer.step()
 
-            print '--loss' + str(float(total_loss.data[0]))
+            print '--loss ' + str(float(total_loss.data[0]))
             loss_list.append(float(total_loss.data[0]))
             save_losses.append(loss_list)
 
     torch.save(net.state_dict(), os.path.join(args.save_dir, 'penn_lstm_pm{:d}.pth'.format(epoch)))
 
 
-def save_prediction(label_map, predict_heatmaps, step, t, epoch):
+def save_prediction(label_map, predict_heatmaps, step, temporals, epoch):
     """
     :param label_map:           5D Tensor    Batch_size  *  Temporal * (joints+1) *   45 * 45
     :param predict_heatmaps:
@@ -103,16 +103,17 @@ def save_prediction(label_map, predict_heatmaps, step, t, epoch):
     :return:
     """
     for b in range(args.batch_size):  # for each batch
-        output = np.ones((50 * 2, 45 * t))  # each temporal save an image
-        for t in range(temporal):  # for each temporal
+        output = np.ones((50 * 2, 50 * temporals))  # each temporal save an image
+        for t in range(temporals):  # for each temporal
             pre = np.zeros((45, 45))  #
             gth = np.zeros((45, 45))
+
             for i in range(21):
-                pre += predict_heatmaps[t][b, i, :, :].numpy()
-                gth += label_map[b,t, i,:,:].numpy()
-            output[0:45,45*t: 45*t+45] = gth
-            output[50:95, 45*t: 45*t+45] = pre
-            scipy.misc.imsave('epoch'+str(epoch) + '_step'+str(step) + '_batch'+ str(b) + '.jpg', output)
+                pre += predict_heatmaps[t][b, i, :, :].data.cpu().numpy()
+                gth += label_map[b, t, i, :, :].data.cpu().numpy()
+            output[0:45,  50 * t: 50 * t + 45] = gth
+            output[50:95, 50 * t: 50 * t + 45] = pre
+            scipy.misc.imsave('epoch'+str(epoch) + '_step'+str(step) + '_batch' + str(b) + '.jpg', output)
     return
 
 
