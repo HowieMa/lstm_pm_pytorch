@@ -172,7 +172,6 @@ class LSTM_PM(nn.Module):
         cell_t:                      48 * 45 * 45
         hide_t:                      48 * 45 * 45
         '''
-        print 'stage ---1'
         initial_heatmap = self.convnet1(image)
         features = self.convnet2(image)
         centermap = self.pool_center_lower(cmap)
@@ -198,7 +197,6 @@ class LSTM_PM(nn.Module):
 
         #
         for i in range(1, self.T):
-            print 'stage ---' + str(i+1)
             image = images[:, (3 * i):(3 * i + 3), :, :]
             heatmap, cell, hide = self.stage2(image, center_map, heatmap, cell, hide)
             heat_maps.append(heatmap)

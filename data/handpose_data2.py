@@ -41,7 +41,7 @@ class UCIHandPoseDataset(Dataset):
                 self.temporal_dir.append(tmp)  #
 
     def __len__(self):
-        return len(self.temporal_dir)
+        return len(self.temporal_dir)/self.temporal
 
     def __getitem__(self, idx):
         """
@@ -80,7 +80,7 @@ class UCIHandPoseDataset(Dataset):
 
         # generate the Gaussian heat map
         center_map = self.genCenterMap(x=self.width / 2.0, y=self.height / 2.0, sigma=21,
-                                       size_w=self.widith, size_h=self.height)
+                                       size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
 
