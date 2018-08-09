@@ -84,7 +84,11 @@ class UCIHandPoseDataset(Dataset):
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
 
-        return images.float(), label_maps.float(), center_map.float()
+        images = Variable(images.float().cuda())
+        label_map = Variable(label_map.float().cuda())
+        center_map = Variable(center_map.float().cuda())
+
+	return images, label_maps, center_map
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
         """
