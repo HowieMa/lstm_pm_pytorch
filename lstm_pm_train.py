@@ -18,10 +18,10 @@ from torchvision import transforms
 
 # hyper parameter
 temporal = 5
-train_data_dir = 'dataset/train/train_data'
-train_label_dir = 'dataset/train/train_label'
-test_data_dir = 'dataset/test/test_data'
-test_label_dir = 'dataset/test/test_label'
+train_data_dir = '/home/haoyum/UCIHand/train/train_data'
+train_label_dir = '/home/haoyum/UCIHand/train/train_label'
+test_data_dir = '/home/haoyum/UCIHand/test/test_data'
+test_label_dir = '/home/haoyum/UCIHand/test/test_label'
 
 
 # add parameter
@@ -123,11 +123,6 @@ def train():
 
                 # pck
 
-
-
-
-
-
     torch.save(net.state_dict(), os.path.join(args.save_dir, 'penn_lstm_pm{:d}.pth'.format(epoch)))
     print 'train done!'
 
@@ -141,7 +136,7 @@ def save_loss(predict_heatmaps, label_map, criterion,train):
                 predict = predict_heatmaps[t][b, i, :, :]  # 2D Tensor
                 target = label_map[b, t, i, :, :]
                 tmp_loss = criterion(predict, target)  # average MSE loss
-                loss_save['batch' + str(b)]['temporal' + str()].append(float(tmp_loss))
+                loss_save['batch' + str(b)]['temporal' + str(t)].append(float(tmp_loss))
                 total_loss += tmp_loss
 
     total_loss = total_loss / (args.batch_size * temporal * 21.0)
