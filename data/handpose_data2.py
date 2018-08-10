@@ -21,43 +21,43 @@ class UCIHandPoseDataset(Dataset):
         self.joints = joints  # 21 heat maps
         self.sigma = sigma  # gaussian center heat map sigma
 
-        # build temporal directory in order to guarantee get all images has equal chance to be trained
-
         self.temporal_dir = []
-
-        if train is True:  # for train dataset, make each image has the same possibility to be trained
-            for seq in self.seqs:
-                if seq == '.DS_Store':
-                    continue
-                image_path = os.path.join(self.data_dir, seq)  #
-                imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
-
-                img_num = len(imgs)
-                if img_num < self.temporal:
-                    continue  # ignore sequences whose length is less than temporal
-
-                for i in range(0, img_num - self.temporal + 1):
-                    tmp = []
-                    for k in range(i, i + self.temporal):
-                        tmp.append(os.path.join(image_path, imgs[k]))
-                    self.temporal_dir.append(tmp)  #
+        if train is True:
+            self.gen_temporal_dir(1)
         else:
-            for seq in self.seqs:
-                if seq == '.DS_Store':
-                    continue
-                image_path = os.path.join(self.data_dir, seq)  #
-                imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
+            self.gen_temporal_dir(temporal)
 
-                img_num = len(imgs)
-                if img_num < self.temporal:
-                    continue  # ignore sequences whose length is less than temporal
 
-                for i in range(0, img_num - self.temporal + 1, temporal):
-                    tmp = []
-                    for k in range(i, i + self.temporal):
-                        tmp.append(os.path.join(image_path, imgs[k]))
 
-                    self.temporal_dir.append(tmp)  #
+    def gen_temporal_dir(self, step):
+        """
+        build temporal directory in order to guarantee get all images has equal chance to be trained
+        for train dataset, make each image has the same possibility to be trained
+
+        :param step: for training set, step = 1, for test set, step = temporal
+        :return:
+        """
+
+        for seq in self.seqs:
+            if seq == '.DS_Store':
+                continue
+            image_path = os.path.join(self.data_dir, seq)  #
+            imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
+            imgs.sort()
+
+            img_num = len(imgs)
+            if img_num < self.temporal:
+                continue  # ignore sequences whose length is less than temporal
+
+            for i in range(0, img_num - self.temporal + 1, step):
+                tmp = []
+                for k in range(i, i + self.temporal):
+                    tmp.append(os.path.join(image_path, imgs[k]))
+                self.temporal_dir.append(tmp)  #
+
+        self.temporal_dir.sort()
+
+
 
 
     def __len__(self):
@@ -74,6 +74,7 @@ class UCIHandPoseDataset(Dataset):
         label_size = self.width / 8 - 1         # 45
 
         imgs = self.temporal_dir[idx]           # ['.../001L0/L0005.jpg', '.../001L0/L0011.jpg', ... ]
+        imgs.sort()
         seq = imgs[0].split('/')[-2]            # 001L0
         label_path = os.path.join(self.label_dir, seq)
         labels = json.load(open(label_path + '.json'))

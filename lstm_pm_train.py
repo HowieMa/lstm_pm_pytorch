@@ -1,3 +1,5 @@
+# https://github.com/HowieMa/lstm_pm_pytorch.git
+
 import argparse
 import json
 import numpy as np
@@ -81,7 +83,7 @@ def train():
         net.train()
         print 'epoch....................' + str(epoch)
 
-        for step, (images, label_map, center_map) in enumerate(train_dataset):
+        for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
             print '--step .....' + str(step)
             images = Variable(images.cuda() if args.cuda else images)               # 4D Tensor
             # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
@@ -154,12 +156,14 @@ def save_loss(predict_heatmaps, label_map, criterion, train):
 
 def save_images(label_map, predict_heatmaps, step, temporals, epoch, imgs):
     """
-    save images in some steps
-    :param label_map:           5D Tensor    Batch_size  *  Temporal * (joints+1) *   45 * 45
-    :param predict_heatmaps:
+
+    :param label_map:
+    :param predict_heatmaps:    5D Tensor    Batch_size  *  Temporal * (joints+1) *   45 * 45
     :param step:
     :param temporals:
     :param epoch:
+    :param imgs: list [(), (), ()] temporal * batch_size
+    :return:
     """
 
     for b in range(args.batch_size):                    # for each batch (person)
@@ -167,7 +171,7 @@ def save_images(label_map, predict_heatmaps, step, temporals, epoch, imgs):
         seq = imgs[0].split('/')[-2]                    # sequence name 001L0
         img = ""
         for t in range(temporals):  # for each temporal
-            im = imgs[t].split('/')[-1][1:5]            # image name 0005
+            im = imgs[t][b].split('/')[-1][1:5]            # image name 0005
             img += '_' + im
             pre = np.zeros((45, 45))  #
             gth = np.zeros((45, 45))
