@@ -8,7 +8,7 @@ from PIL import Image
 
 
 class UCIHandPoseDataset(Dataset):
-    def __init__(self, data_dir, label_dir, temporal=10, joints=21, transform=None, sigma=1):
+    def __init__(self, data_dir, label_dir, train, temporal=10, joints=21, transform=None, sigma=1):
         self.height = 368
         self.width = 368
 
@@ -22,23 +22,43 @@ class UCIHandPoseDataset(Dataset):
         self.sigma = sigma  # gaussian center heat map sigma
 
         # build temporal directory in order to guarantee get all images has equal chance to be trained
+
         self.temporal_dir = []
-        for seq in self.seqs:
-            if seq == '.DS_Store':
-                continue
-            image_path = os.path.join(self.data_dir, seq)  #
-            imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
 
-            img_num = len(imgs)
-            if img_num < self.temporal:
-                continue  # ignore sequences whose length is less than temporal
+        if train is True:  # for train dataset, make each image has the same possibility to be trained
+            for seq in self.seqs:
+                if seq == '.DS_Store':
+                    continue
+                image_path = os.path.join(self.data_dir, seq)  #
+                imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
 
-            for i in range(0, img_num - self.temporal + 1):
-                tmp = []
-                for k in range(i, i + self.temporal):
-                    tmp.append(os.path.join(image_path, imgs[k]))
+                img_num = len(imgs)
+                if img_num < self.temporal:
+                    continue  # ignore sequences whose length is less than temporal
 
-                self.temporal_dir.append(tmp)  #
+                for i in range(0, img_num - self.temporal + 1):
+                    tmp = []
+                    for k in range(i, i + self.temporal):
+                        tmp.append(os.path.join(image_path, imgs[k]))
+                    self.temporal_dir.append(tmp)  #
+        else:
+            for seq in self.seqs:
+                if seq == '.DS_Store':
+                    continue
+                image_path = os.path.join(self.data_dir, seq)  #
+                imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
+
+                img_num = len(imgs)
+                if img_num < self.temporal:
+                    continue  # ignore sequences whose length is less than temporal
+
+                for i in range(0, img_num - self.temporal + 1, temporal):
+                    tmp = []
+                    for k in range(i, i + self.temporal):
+                        tmp.append(os.path.join(image_path, imgs[k]))
+
+                    self.temporal_dir.append(tmp)  #
+
 
     def __len__(self):
         return len(self.temporal_dir)/self.temporal
@@ -83,12 +103,7 @@ class UCIHandPoseDataset(Dataset):
                                        size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
-
-        images = Variable(images.float().cuda())
-        label_map = Variable(label_map.float().cuda())
-        center_map = Variable(center_map.float().cuda())
-
-	return images, label_maps, center_map
+        return images.float(), label_maps.float(), center_map.float()
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
         """

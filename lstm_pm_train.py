@@ -1,5 +1,9 @@
 import argparse
-from torchvision import transforms
+import json
+import numpy as np
+import os
+import scipy.misc
+
 from model.lstm_pm import LSTM_PM
 from data.handpose_data2 import UCIHandPoseDataset
 
@@ -7,29 +11,28 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 
-import numpy as np
-
+from torch.optim.lr_scheduler import StepLR
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
-import os
-import scipy.misc
+from torchvision import transforms
 
 # hyper parameter
 temporal = 5
-data_dir = 'dataset/train/train_data'
-label_dir = 'dataset/train/train_label'
-predict_dir = ''
-loss_dir = ''
+train_data_dir = 'dataset/train/train_data'
+train_label_dir = 'dataset/train/train_label'
+test_data_dir = 'dataset/test/test_data'
+test_label_dir = 'dataset/test/test_label'
 
 
 # add parameter
 parser = argparse.ArgumentParser(description='Pytorch LSTM_PM with Penn_Action')
-parser.add_argument('--learning_rate', type=float, default=8e-5, help='learning rate')
+parser.add_argument('--learning_rate', type=float, default=8e-6, help='learning rate')
 parser.add_argument('--batch_size', default=4, type=int, help='batch size for training')
 parser.add_argument('--epochs', default=30, type=int, help='number of epochs for training')
 parser.add_argument('--begin_epoch', default=0, type=int, help='how many epochs the model has been trained')
 parser.add_argument('--save_dir', default='ckpt', type=str, help='directory of checkpoint')
 parser.add_argument('--cuda', default=1, type=int, help='if you use GPU, set cuda = 1,else set cuda = 0')
+parser.add_argument('--temporal', default=4, type=int, help='how many temporals you want ')
 args = parser.parse_args()
 
 if not os.path.exists(args.save_dir):
@@ -38,26 +41,43 @@ if not os.path.exists(args.save_dir):
 transform = transforms.Compose([transforms.ToTensor()])
 
 # Build dataset
-dataset = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir, temporal=temporal)
-print 'Dataset total number of images sequence is ----' + str(len(dataset))
+train_data = UCIHandPoseDataset(data_dir=train_data_dir, label_dir=train_label_dir, temporal=temporal, train=True)
+test_data = UCIHandPoseDataset(data_dir=test_data_dir, label_dir=test_label_dir, temporal=temporal, train=False)
+
+
+print 'Train dataset total number of images sequence is ----' + str(len(train_data))
+print 'Test  dataset total number of images sequence is ----' + str(len(test_data))
 
 # Data Loader
-train_dataset = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
+train_dataset = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
+test_dataset = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
 
 # Build model
 net = LSTM_PM(T=temporal)
 if args.cuda:
     net = net.cuda()
 
-save_losses = []
+#
+
+def loss_history_init():
+    loss_history = {}
+    for b in range(args.batch_size):  # each person
+        loss_history['batch'+str(b)] = {}
+        for t in range(temporal):
+            loss_history['temporal'+str(t)] = []
+    loss_history['total'] = 0.0
+    return loss_history
 
 
 def train():
-    optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
-    criterion = nn.MSELoss()
-    net.train()
+    # initialize
+    optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
+    scheduler = StepLR(optimizer, step_size=40000, gamma=0.333)
+    criterion = nn.MSELoss(size_average=True)  # loss average
+
     for epoch in range(args.begin_epoch, args.epochs + 1):
-        print 'epoch............' + str(epoch)
+        net.train()
+        print 'epoch....................' + str(epoch)
 
         for step, (images, label_map, center_map) in enumerate(train_dataset):
             print '--step .....' + str(step)
@@ -70,57 +90,98 @@ def train():
 
             optimizer.zero_grad()
 
-            predict_heatmaps = net(images, center_map)  # get a list size: temporal
+            predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
 
-            loss_list = []  # loss of  4 temporal and total loss
-            total_loss = 0
-            for i in range(len(predict_heatmaps)):       # for each temporal
-                predict = predict_heatmaps[i]            # 4D Tensor  Batch_size * (joints+1) * 45 * 45
-                target = label_map[:, i, :, :, :]        # 4D Tensor  Batch_size * (joints+1) * 45 * 45
-                each_loss = criterion(predict, target)   # calculate loss
+            # ******************** calculate and save loss of each joints ********************
 
-                loss_list.append(float(each_loss))  # save loss of each joint
-                total_loss += each_loss
+            total_loss = save_loss(predict_heatmaps, label_map, criterion,train=True)
 
-            if step % 100 == 0:                          # save images
-                save_prediction(label_map, predict_heatmaps, step, temporal, epoch)
+            # ******************** save training heat maps per 100 steps ********************
+            if step % 100 == 0:
+                save_images(label_map, predict_heatmaps, step, temporal, epoch)
 
+            # backward
             total_loss.backward()
             optimizer.step()
+            scheduler.step()
 
-            print '--loss ' + str(float(total_loss.data[0]))
-            loss_list.append(float(total_loss.data[0]))  # save total loss
-            save_losses.append(loss_list)
+        # ******************** test per 10 epochs ********************
+        if epoch % 10 == 9:
+            net.eval()
+            print '**** test data ****'
+            for step, (images, label_map, center_map) in enumerate(test_dataset):
+                print '--step .....' + str(step)
+                images = Variable(images.cuda() if args.cuda else images)  # 4D Tensor
+                # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
+                label_map = Variable(label_map.cuda() if args.cuda else label_map)  # 5D Tensor
+                # Batch_size  *  Temporal        * (joints+1) *   45 * 45
+                center_map = Variable(center_map.cuda() if args.cuda else center_map)  # 4D Tensor
+                # Batch_size  *  1          * width(368) * height(368)
+
+                predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
+                total_loss = save_loss(predict_heatmaps, label_map, criterion, train=False)
+
+                # pck
+
+
+
 
 
 
     torch.save(net.state_dict(), os.path.join(args.save_dir, 'penn_lstm_pm{:d}.pth'.format(epoch)))
+    print 'train done!'
 
 
-def save_prediction(label_map, predict_heatmaps, step, temporals, epoch):
+def save_loss(predict_heatmaps, label_map, criterion,train):
+    loss_save = loss_history_init()
+    total_loss = 0
+    for b in range(args.batch_size):  # for each batch (person)
+        for t in range(temporal):  # for each temporal
+            for i in range(21):  # for each joint
+                predict = predict_heatmaps[t][b, i, :, :]  # 2D Tensor
+                target = label_map[b, t, i, :, :]
+                tmp_loss = criterion(predict, target)  # average MSE loss
+                loss_save['batch' + str(b)]['temporal' + str()].append(float(tmp_loss))
+                total_loss += tmp_loss
+
+    total_loss = total_loss / (args.batch_size * temporal * 21.0)
+    loss_save['total'] = float(total_loss.data[0])
+    print '--loss ' + str(float(total_loss.data[0]))
+    if train is True:
+        json.dump(loss_save, open('ckpt/'+'train_loss.json', 'wb'))
+    else:
+        json.dump(loss_save, open('ckpt/' + 'test_loss.json', 'wb'))
+
+    return total_loss
+
+
+def save_images(label_map, predict_heatmaps, step, temporals, epoch):
     """
     save images in some steps
     :param label_map:           5D Tensor    Batch_size  *  Temporal * (joints+1) *   45 * 45
     :param predict_heatmaps:
     :param step:
-    :param t:
+    :param temporals:
     :param epoch:
-    :return:
     """
 
-    for b in range(args.batch_size):  # for each batch
-        output = np.ones((50 * 2, 50 * temporals))  # each temporal save an image
+    for b in range(args.batch_size):                    # for each batch (person)
+        output = np.ones((50 * 2, 50 * temporals))      # each temporal save an image
         for t in range(temporals):  # for each temporal
             pre = np.zeros((45, 45))  #
             gth = np.zeros((45, 45))
 
             for i in range(21):
-                pre += predict_heatmaps[t][b, i, :, :].data.cpu().numpy()
-                gth += label_map[b, t, i, :, :].data.cpu().numpy()
+                pre += predict_heatmaps[t][b, i, :, :].data.cpu().numpy()    # 2D
+                gth += label_map[b, t, i, :, :].data.cpu().numpy()           # 2D
             output[0:45,  50 * t: 50 * t + 45] = gth
             output[50:95, 50 * t: 50 * t + 45] = pre
             scipy.misc.imsave('ckpt/epoch'+str(epoch) + '_step'+str(step) + '_batch' + str(b) + '.jpg', output)
-    return
+
+def PCK(predict, target):
+
+    return 0
+
 
 
 if __name__ =='__main__':
