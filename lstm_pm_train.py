@@ -64,15 +64,17 @@ def loss_history_init():
     for b in range(args.batch_size):  # each person
         loss_history['batch'+str(b)] = {}
         for t in range(temporal):
-            loss_history['temporal'+str(t)] = []
+            loss_history['batch'+str(b)]['temporal'+str(t)] = []
     loss_history['total'] = 0.0
     return loss_history
 
 
 def train():
-    # initialize
+    # initialize optimizer
     optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
     scheduler = StepLR(optimizer, step_size=40000, gamma=0.333)
+    optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
+
     criterion = nn.MSELoss(size_average=True)  # loss average
 
     for epoch in range(args.begin_epoch, args.epochs + 1):
@@ -98,7 +100,7 @@ def train():
 
             # ******************** save training heat maps per 100 steps ********************
             if step % 100 == 0:
-                save_images(label_map, predict_heatmaps, step, temporal, epoch)
+                save_images(label_map, predict_heatmaps, step, temporal, epoch, imgs)
 
             # backward
             total_loss.backward()
@@ -109,7 +111,7 @@ def train():
         if epoch % 10 == 9:
             net.eval()
             print '**** test data ****'
-            for step, (images, label_map, center_map) in enumerate(test_dataset):
+            for step, (images, label_map, center_map, imgs) in enumerate(test_dataset):
                 print '--step .....' + str(step)
                 images = Variable(images.cuda() if args.cuda else images)  # 4D Tensor
                 # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
@@ -127,7 +129,7 @@ def train():
     print 'train done!'
 
 
-def save_loss(predict_heatmaps, label_map, criterion,train):
+def save_loss(predict_heatmaps, label_map, criterion, train):
     loss_save = loss_history_init()
     total_loss = 0
     for b in range(args.batch_size):  # for each batch (person)
@@ -150,7 +152,7 @@ def save_loss(predict_heatmaps, label_map, criterion,train):
     return total_loss
 
 
-def save_images(label_map, predict_heatmaps, step, temporals, epoch):
+def save_images(label_map, predict_heatmaps, step, temporals, epoch, imgs):
     """
     save images in some steps
     :param label_map:           5D Tensor    Batch_size  *  Temporal * (joints+1) *   45 * 45
@@ -161,17 +163,27 @@ def save_images(label_map, predict_heatmaps, step, temporals, epoch):
     """
 
     for b in range(args.batch_size):                    # for each batch (person)
-        output = np.ones((50 * 2, 50 * temporals))      # each temporal save an image
+        output = np.ones((50 * 2, 50 * temporals))      # each temporal save a single image
+        seq = imgs[0].split('/')[-2]                    # sequence name 001L0
+        img = ""
         for t in range(temporals):  # for each temporal
+            im = imgs[t].split('/')[-1][1:5]            # image name 0005
+            img += '_' + im
             pre = np.zeros((45, 45))  #
             gth = np.zeros((45, 45))
 
             for i in range(21):
                 pre += predict_heatmaps[t][b, i, :, :].data.cpu().numpy()    # 2D
                 gth += label_map[b, t, i, :, :].data.cpu().numpy()           # 2D
+
             output[0:45,  50 * t: 50 * t + 45] = gth
             output[50:95, 50 * t: 50 * t + 45] = pre
-            scipy.misc.imsave('ckpt/epoch'+str(epoch) + '_step'+str(step) + '_batch' + str(b) + '.jpg', output)
+
+
+        if not os.path.exists('ckpt/epoch'+str(epoch)):
+            os.mkdir('ckpt/epoch'+str(epoch))
+
+        scipy.misc.imsave('ckpt/epoch'+str(epoch) + '/s'+str(step) + '_b' + str(b) + seq + img + '.jpg', output)
 
 def PCK(predict, target):
 
