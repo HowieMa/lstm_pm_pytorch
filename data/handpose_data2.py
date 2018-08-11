@@ -8,6 +8,7 @@ from PIL import Image
 
 
 class UCIHandPoseDataset(Dataset):
+
     def __init__(self, data_dir, label_dir, train, temporal=10, joints=21, transform=None, sigma=1):
         self.height = 368
         self.width = 368
@@ -26,8 +27,6 @@ class UCIHandPoseDataset(Dataset):
             self.gen_temporal_dir(1)
         else:
             self.gen_temporal_dir(temporal)
-
-
 
     def gen_temporal_dir(self, step):
         """
@@ -56,9 +55,7 @@ class UCIHandPoseDataset(Dataset):
                 self.temporal_dir.append(tmp)  #
 
         self.temporal_dir.sort()
-
-
-
+        print 'total numbers of image sequence is ' + str(len(self.temporal_dir))
 
     def __len__(self):
         return len(self.temporal_dir)/self.temporal
@@ -146,6 +143,8 @@ class UCIHandPoseDataset(Dataset):
         # back ground
         label_maps[joints, :, :] = 1 - background
         return label_maps  # numpy           label_size * label_size * (joints + 1)
+
+
 
 
 # # test case

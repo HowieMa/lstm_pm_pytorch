@@ -59,7 +59,6 @@ net = LSTM_PM(T=temporal)
 if args.cuda:
     net = net.cuda()
 
-#
 
 def loss_history_init():
     loss_history = {}
@@ -97,7 +96,6 @@ def train():
             predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
 
             # ******************** calculate and save loss of each joints ********************
-
             total_loss = save_loss(predict_heatmaps, label_map, criterion,train=True)
 
             # ******************** save training heat maps per 100 steps ********************
@@ -110,7 +108,8 @@ def train():
             scheduler.step()
 
         # ******************** test per 10 epochs ********************
-        if epoch % 10 == 9:
+        if epoch % 10 == 0:
+            pck_all=[]
             net.eval()
             print '**** test data ****'
             for step, (images, label_map, center_map, imgs) in enumerate(test_dataset):
@@ -125,7 +124,10 @@ def train():
                 predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
                 total_loss = save_loss(predict_heatmaps, label_map, criterion, train=False)
 
-                # pck
+                # calculate pck
+                pck_all.append(evaluation(label_map, predict_heatmaps))
+
+            print 'PCK evaluation in test dataset is ' + str(sum(pck_all) / len(pck_all))
 
     torch.save(net.state_dict(), os.path.join(args.save_dir, 'penn_lstm_pm{:d}.pth'.format(epoch)))
     print 'train done!'
@@ -168,7 +170,7 @@ def save_images(label_map, predict_heatmaps, step, temporals, epoch, imgs):
 
     for b in range(args.batch_size):                    # for each batch (person)
         output = np.ones((50 * 2, 50 * temporals))      # each temporal save a single image
-        seq = imgs[0].split('/')[-2]                    # sequence name 001L0
+        seq = imgs[0][b].split('/')[-2]                    # sequence name 001L0
         img = ""
         for t in range(temporals):  # for each temporal
             im = imgs[t][b].split('/')[-1][1:5]            # image name 0005
@@ -183,16 +185,42 @@ def save_images(label_map, predict_heatmaps, step, temporals, epoch, imgs):
             output[0:45,  50 * t: 50 * t + 45] = gth
             output[50:95, 50 * t: 50 * t + 45] = pre
 
-
         if not os.path.exists('ckpt/epoch'+str(epoch)):
             os.mkdir('ckpt/epoch'+str(epoch))
 
         scipy.misc.imsave('ckpt/epoch'+str(epoch) + '/s'+str(step) + '_b' + str(b) + seq + img + '.jpg', output)
 
-def PCK(predict, target):
 
-    return 0
+def evaluation(label_map, predict_heatmaps):
+    pck_eval = []
+    for b in range(args.batch_size):        # for each batch (person)
+        for t in range(temporal):           # for each temporal
+            target = label_map[b, t, :, :, :].data.cpu.numpy()
+            predict = predict_heatmaps[t][b, :, :, :].data.cpu.numpy()
+            pck_eval.append(PCK(predict, target))
 
+    return sum(pck_eval) / float(len(pck_eval))  #
+
+
+def PCK(predict, target, label_size=45, sigma=0.04):
+    """
+    calculate possibility of correct key point of one single image
+    if distance of ground truth and predict point is less than sigma, than
+    :param predict:         3D numpy       22 * 45 * 45
+    :param target:          3D numpy       22 * 45 * 45
+    :param label_size:
+    :param sigma:
+    :return:
+    """
+    pck = 0
+    for i in range(predict.shape[0]):
+        pre_x, pre_y = np.where(predict[i, :, :] == np.max(predict[i, :, :]))
+        tar_x, tar_y = np.where(predict[i, :, :] == np.max(target[i, :, :]))
+
+        dis = np.sqrt((pre_x - tar_x)**2 + (pre_y - tar_y)**2)
+        if dis < sigma * label_size:
+            pck += 1
+    return pck / float(predict.shape[0])
 
 
 if __name__ =='__main__':
