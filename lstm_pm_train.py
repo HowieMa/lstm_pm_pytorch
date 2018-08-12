@@ -84,11 +84,6 @@ def train():
         print 'epoch....................' + str(epoch)
 
         for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
-
-            if step % 10 ==0:
-                print '--step .....' + str(step)
-                print '--loss ' + str(float(total_loss.data[0]))
-
             images = Variable(images.cuda() if args.cuda else images)               # 4D Tensor
             # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
             label_map = Variable(label_map.cuda() if args.cuda else label_map)      # 5D Tensor
@@ -101,8 +96,10 @@ def train():
             predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
 
             # ******************** calculate and save loss of each joints ********************
-            total_loss = save_loss(predict_heatmaps, label_map, criterion,train=True)
-
+            total_loss = save_loss(predict_heatmaps, label_map, criterion, train=True)
+            if step % 10 ==0:
+                print '--step .....' + str(step)
+                print '--loss ' + str(float(total_loss.data[0]))
             # ******************** save training heat maps per 100 steps ********************
             if step % 100 == 0:
                 save_images(label_map, predict_heatmaps, step, temporal, epoch, imgs)
