@@ -84,7 +84,11 @@ def train():
         print 'epoch....................' + str(epoch)
 
         for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
-            print '--step .....' + str(step)
+
+            if step % 10 ==0:
+                print '--step .....' + str(step)
+                print '--loss ' + str(float(total_loss.data[0]))
+
             images = Variable(images.cuda() if args.cuda else images)               # 4D Tensor
             # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
             label_map = Variable(label_map.cuda() if args.cuda else label_map)      # 5D Tensor
@@ -110,11 +114,10 @@ def train():
 
         # ******************** test per 10 epochs ********************
         if epoch % 10 == 0:
-            pck_all=[]
+            pck_all = []
             net.eval()
-            print '**** test data ****'
+            print '********* test data *********'
             for step, (images, label_map, center_map, imgs) in enumerate(test_dataset):
-                print '--step .....' + str(step)
                 images = Variable(images.cuda() if args.cuda else images)  # 4D Tensor
                 # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
                 label_map = Variable(label_map.cuda() if args.cuda else label_map)  # 5D Tensor
@@ -124,6 +127,9 @@ def train():
 
                 predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
                 total_loss = save_loss(predict_heatmaps, label_map, criterion, train=False)
+                if step % 10 ==0:
+                    print '--step .....' + str(step)
+                    print '--loss ' + str(float(total_loss.data[0]))
 
                 # calculate pck
                 pck_all.append(evaluation(label_map, predict_heatmaps))
@@ -148,7 +154,7 @@ def save_loss(predict_heatmaps, label_map, criterion, train):
 
     total_loss = total_loss / (label_map.shape[0] * temporal * 21.0)
     loss_save['total'] = float(total_loss.data[0])
-    print '--loss ' + str(float(total_loss.data[0]))
+
     if train is True:
         json.dump(loss_save, open('ckpt/'+'train_loss.json', 'wb'))
     else:
@@ -159,7 +165,6 @@ def save_loss(predict_heatmaps, label_map, criterion, train):
 
 def save_images(label_map, predict_heatmaps, step, temporals, epoch, imgs):
     """
-
     :param label_map:
     :param predict_heatmaps:    5D Tensor    Batch_size  *  Temporal * (joints+1) *   45 * 45
     :param step:
@@ -196,8 +201,8 @@ def evaluation(label_map, predict_heatmaps):
     pck_eval = []
     for b in range(label_map.shape[0]):        # for each batch (person)
         for t in range(temporal):           # for each temporal
-            target = label_map[b, t, :, :, :].data.cpu.numpy()
-            predict = predict_heatmaps[t][b, :, :, :].data.cpu.numpy()
+            target = np.asarray(label_map[b, t, :, :, :].data)
+            predict = np.asarray(predict_heatmaps[t][b, :, :, :].data)
             pck_eval.append(PCK(predict, target))
 
     return sum(pck_eval) / float(len(pck_eval))  #
@@ -216,9 +221,9 @@ def PCK(predict, target, label_size=45, sigma=0.04):
     pck = 0
     for i in range(predict.shape[0]):
         pre_x, pre_y = np.where(predict[i, :, :] == np.max(predict[i, :, :]))
-        tar_x, tar_y = np.where(predict[i, :, :] == np.max(target[i, :, :]))
+        tar_x, tar_y = np.where(target[i, :, :] == np.max(target[i, :, :]))
 
-        dis = np.sqrt((pre_x - tar_x)**2 + (pre_y - tar_y)**2)
+        dis = np.sqrt((pre_x[0] - tar_x[0])**2 + (pre_y[0] - tar_y[0])**2)
         if dis < sigma * label_size:
             pck += 1
     return pck / float(predict.shape[0])
