@@ -74,6 +74,7 @@ def train():
     # initialize optimizer
     optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
     scheduler = StepLR(optimizer, step_size=40000, gamma=0.333)
+
     optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
 
     criterion = nn.MSELoss(size_average=True)  # loss average
@@ -136,7 +137,7 @@ def train():
 def save_loss(predict_heatmaps, label_map, criterion, train):
     loss_save = loss_history_init()
     total_loss = 0
-    for b in range(args.batch_size):  # for each batch (person)
+    for b in range(label_map.shape[0]):  # for each batch (person)
         for t in range(temporal):  # for each temporal
             for i in range(21):  # for each joint
                 predict = predict_heatmaps[t][b, i, :, :]  # 2D Tensor
@@ -145,7 +146,7 @@ def save_loss(predict_heatmaps, label_map, criterion, train):
                 loss_save['batch' + str(b)]['temporal' + str(t)].append(float(tmp_loss))
                 total_loss += tmp_loss
 
-    total_loss = total_loss / (args.batch_size * temporal * 21.0)
+    total_loss = total_loss / (label_map.shape[0] * temporal * 21.0)
     loss_save['total'] = float(total_loss.data[0])
     print '--loss ' + str(float(total_loss.data[0]))
     if train is True:
@@ -168,7 +169,7 @@ def save_images(label_map, predict_heatmaps, step, temporals, epoch, imgs):
     :return:
     """
 
-    for b in range(args.batch_size):                    # for each batch (person)
+    for b in range(label_map.shape[0]):                    # for each batch (person)
         output = np.ones((50 * 2, 50 * temporals))      # each temporal save a single image
         seq = imgs[0][b].split('/')[-2]                    # sequence name 001L0
         img = ""
@@ -193,7 +194,7 @@ def save_images(label_map, predict_heatmaps, step, temporals, epoch, imgs):
 
 def evaluation(label_map, predict_heatmaps):
     pck_eval = []
-    for b in range(args.batch_size):        # for each batch (person)
+    for b in range(label_map.shape[0]):        # for each batch (person)
         for t in range(temporal):           # for each temporal
             target = label_map[b, t, :, :, :].data.cpu.numpy()
             predict = predict_heatmaps[t][b, :, :, :].data.cpu.numpy()
