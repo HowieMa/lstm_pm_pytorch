@@ -54,7 +54,7 @@ def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=
     """
 
     for b in range(label_map.shape[0]):                     # for each batch (person)
-        output = np.ones((50 * 2, 50 * temporal))           # each temporal save a single image
+        output = np.zeros((50 * 2, 50 * temporal))           # cd .. temporal save a single image
         seq = imgs[0][b].split('/')[-2]                     # sequence name 001L0
         img = ""
         for t in range(temporal):                           # for each temporal
@@ -110,7 +110,6 @@ def PCK(predict, target, label_size=45, sigma=0.04):
         if dis < sigma * label_size:
             pck += 1
     return pck / float(predict.shape[0])
-
 
 
 

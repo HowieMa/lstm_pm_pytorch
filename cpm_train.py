@@ -1,6 +1,6 @@
 # https://github.com/HowieMa/lstm_pm_pytorch.git
 import argparse
-from model.lstm_pm import LSTM_PM
+from model.cpm import CPM
 from data.handpose_data2 import UCIHandPoseDataset
 from src.utils import *
 
@@ -52,7 +52,7 @@ train_dataset = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
 test_dataset = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
 
 # Build model
-net = LSTM_PM(T=temporal)
+net = CPM()
 if args.cuda:
     net = net.cuda(device_ids[0])
     net = nn.DataParallel(net, device_ids=device_ids)
@@ -68,9 +68,8 @@ def train():
 
     criterion = nn.MSELoss(size_average=True)                       # loss function MSE average
 
-    net.train()
     for epoch in range(args.begin_epoch, args.epochs + 1):
-
+        net.train()
         print 'epoch....................' + str(epoch)
         for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
             images = Variable(images.cuda(device_ids[0]) if args.cuda else images)               # 4D Tensor

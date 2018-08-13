@@ -9,7 +9,7 @@ from PIL import Image
 
 class UCIHandPoseDataset(Dataset):
 
-    def __init__(self, data_dir, label_dir, train, temporal=10, joints=21, transform=None, sigma=1):
+    def __init__(self, data_dir, label_dir, joints=21, transform=None, sigma=1):
         self.height = 368
         self.width = 368
 
@@ -17,26 +17,16 @@ class UCIHandPoseDataset(Dataset):
         self.data_dir = data_dir
         self.label_dir = label_dir
 
-        self.temporal = temporal
         self.transform = transform
         self.joints = joints  # 21 heat maps
         self.sigma = sigma  # gaussian center heat map sigma
 
         self.temporal_dir = []
+        self.gen_imgs_dir()
 
-        self.train = train
-
-        if self.train is True:
-            self.gen_temporal_dir(1)
-        else:
-            self.gen_temporal_dir(temporal)
-
-    def gen_temporal_dir(self, step):
+    def gen_imgs_dir(self):
         """
-        build temporal directory in order to guarantee get all images has equal chance to be trained
-        for train dataset, make each image has the same possibility to be trained
-
-        :param step: for training set, step = 1, for test set, step = temporal
+        get directory of all images
         :return:
         """
 
@@ -51,64 +41,53 @@ class UCIHandPoseDataset(Dataset):
             if img_num < self.temporal:
                 continue  # ignore sequences whose length is less than temporal
 
-            for i in range(0, img_num - self.temporal + 1, step):
+            for i in range(0, img_num):
                 tmp = []
                 for k in range(i, i + self.temporal):
                     tmp.append(os.path.join(image_path, imgs[k]))
                 self.temporal_dir.append(tmp)  #
 
         self.temporal_dir.sort()
-        print 'total numbers of image sequence is ' + str(len(self.temporal_dir))
+        print 'total numbers of image is ' + str(len(self.temporal_dir))
 
     def __len__(self):
-        if self.train is True:
-            length = len(self.temporal_dir)/self.temporal
-        else:
-            length = len(self.temporal_dir)
-        return length
+        return len(self.temporal_dir)
 
     def __getitem__(self, idx):
         """
         :param idx:
         :return:
-        images          3D Tensor      (temporal * 3)   *   height(368)   *   weight(368)
-        label_map       4D Tensor      temporal         *   (joints + 1)  *   label_size(45)   *   label_size(45)
-        center_map      3D Tensor      1                *   height(368)   *   weight(368)
+        images          3D Tensor      3                *   height(368)      *   weight(368)
+        label_map       3D Tensor      (joints + 1)     *   label_size(45)   *   label_size(45)
+        center_map      3D Tensor      1                *   height(368)      *   weight(368)
         """
-        label_size = self.width / 8 - 1         # 45
 
-        imgs = self.temporal_dir[idx]           # ['.../001L0/L0005.jpg', '.../001L0/L0011.jpg', ... ]
-        imgs.sort()
-        seq = imgs[0].split('/')[-2]            # 001L0
+        label_size = self.width / 8 - 1         # 45
+        img = self.temporal_dir[idx]           # # '.../001L0/L0005.jpg'
+        seq = img.split('/')[-2]            # 001L0
         label_path = os.path.join(self.label_dir, seq)
         labels = json.load(open(label_path + '.json'))
 
-        # initialize
-        images = torch.zeros(self.temporal * 3, self.width, self.height)
-        label_maps = torch.zeros(self.temporal, self.joints + 1, label_size, label_size)
+        # get image
+        im = Image.open(img)                # read image
+        w, h, c = np.asarray(im).shape      # weight 256 * height 256 * 3
+        ratio_x = self.width / float(w)
+        ratio_y = self.height / float(h)    # 368 / 256 = 1.4375
+        im = im.resize((self.width, self.height))                       # unit8      weight 368 * height 368 * 3
+        image = transforms.ToTensor()(im)   # 3D Tensor  3 * height 368 * weight 368
 
-        for i in range(self.temporal):          # get temporal images
-            img = imgs[i]                       # '.../001L0/L0005.jpg'
-            # get image
-            im = Image.open(img)                # read image
-            w, h, c = np.asarray(im).shape      # weight 256 * height 256 * 3
-            ratio_x = self.width / float(w)
-            ratio_y = self.height / float(h)    # 368 / 256 = 1.4375
-            im = im.resize((self.width, self.height))                       # unit8      weight 368 * height 368 * 3
-            images[(i * 3):(i * 3 + 3), :, :] = transforms.ToTensor()(im)   # 3D Tensor  3 * height 368 * weight 368
-            # ToTensor function will normalize data
-
-            # get label map
-            label = labels[img.split('/')[-1][1:5]]         # 0005  list       21 * 2
-            lbl = self.genLabelMap(label, label_size=label_size, joints=self.joints, ratio_x=ratio_x, ratio_y=ratio_y)
-            label_maps[i, :, :, :] = torch.from_numpy(lbl)
+        # get label map
+        label = labels[img.split('/')[-1][1:5]]         # 0005  list       21 * 2
+        lbl = self.genLabelMap(label, label_size=label_size, joints=self.joints, ratio_x=ratio_x, ratio_y=ratio_y)
+        label_maps = torch.from_numpy(lbl)
 
         # generate the Gaussian heat map
         center_map = self.genCenterMap(x=self.width / 2.0, y=self.height / 2.0, sigma=21,
                                        size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
-        return images.float(), label_maps.float(), center_map.float(), imgs
+
+        return image.float(), label_maps.float(), center_map.float(), img
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
         """
@@ -152,17 +131,3 @@ class UCIHandPoseDataset(Dataset):
         return label_maps  # numpy           label_size * label_size * (joints + 1)
 
 
-
-
-# # test case
-# temporal = 5
-# data_dir = '../dataset/frames/001'
-# label_dir = '../dataset/label/001'
-#
-# dataset = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir, temporal=temporal)
-#
-# a = dataset.temporal_dir
-# images, label_maps,center_map =  dataset[2]
-# print images.shape  # (5*3) * 368 * 368
-# print label_maps.shape  # 5 22 45 45
-#

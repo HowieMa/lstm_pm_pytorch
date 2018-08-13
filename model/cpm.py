@@ -224,5 +224,4 @@ def mse_loss(pred_6, target, weight=None, weighted_loss=False, size_average=True
 
 
 
-#net = CPM(20)
 
