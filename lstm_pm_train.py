@@ -1,15 +1,8 @@
 # https://github.com/HowieMa/lstm_pm_pytorch.git
-
 import argparse
-import json
-import numpy as np
-import os
-import scipy.misc
-
 from model.lstm_pm import LSTM_PM
 from data.handpose_data2 import UCIHandPoseDataset
-from src.utils import  *
-
+from src.utils import *
 
 import torch
 import torch.optim as optim
@@ -20,6 +13,8 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torchvision import transforms
 
+# multi-GPU
+device_ids = [2, 3]
 
 # hyper parameter
 temporal = 5
@@ -27,7 +22,6 @@ train_data_dir = '/home/haoyum/UCIHand/train/train_data'
 train_label_dir = '/home/haoyum/UCIHand/train/train_label'
 test_data_dir = '/home/haoyum/UCIHand/test/test_data'
 test_label_dir = '/home/haoyum/UCIHand/test/test_label'
-
 
 # add parameter
 parser = argparse.ArgumentParser(description='Pytorch LSTM_PM with Penn_Action')
@@ -60,8 +54,8 @@ test_dataset = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
 # Build model
 net = LSTM_PM(T=temporal)
 if args.cuda:
-    net = net.cuda()
-    net = nn.DataParallel(net, device_ids=[2, 3])
+    net = net.cuda(device_ids[0])
+    net = nn.DataParallel(net, device_ids=device_ids)
 
 
 def train():
@@ -70,19 +64,19 @@ def train():
     scheduler = StepLR(optimizer, step_size=40000, gamma=0.333)
 
     optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
+    optimizer = nn.DataParallel(optimizer, device_ids=device_ids)  # for multi- GPU
 
-    criterion = nn.MSELoss(size_average=True)  # loss average
+    criterion = nn.MSELoss(size_average=True)                       # loss function MSE average
 
     for epoch in range(args.begin_epoch, args.epochs + 1):
         net.train()
         print 'epoch....................' + str(epoch)
-
         for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
-            images = Variable(images.cuda() if args.cuda else images)               # 4D Tensor
+            images = Variable(images.cuda(device_ids[0]) if args.cuda else images)               # 4D Tensor
             # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
-            label_map = Variable(label_map.cuda() if args.cuda else label_map)      # 5D Tensor
+            label_map = Variable(label_map.cuda(device_ids[0]) if args.cuda else label_map)      # 5D Tensor
             # Batch_size  *  Temporal        * (joints+1) *   45 * 45
-            center_map = Variable(center_map.cuda() if args.cuda else center_map)   # 4D Tensor
+            center_map = Variable(center_map.cuda(device_ids[0]) if args.cuda else center_map)   # 4D Tensor
             # Batch_size  *  1          * width(368) * height(368)
 
             optimizer.zero_grad()
@@ -100,7 +94,7 @@ def train():
 
             # backward
             total_loss.backward()
-            optimizer.step()
+            optimizer.module.step()
             scheduler.step()
 
         #  ************************* save model per 10 epochs  *************************
