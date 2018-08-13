@@ -30,8 +30,12 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
     loss_save['total'] = float(total_loss.data[0])
 
     if train is True:
-        json.dump(loss_save, open('ckpt/'+'train_loss_e' + str(epoch) + '_s' + str(step) + '.json', 'wb'))
+        if not os.path.exists('ckpt/loss_epoch' + str(epoch)):
+            os.mkdir('ckpt/loss_epoch' + str(epoch))
+        json.dump(loss_save, open('ckpt/loss_epoch' + str(epoch) + '/s' + str(step) + '.json', 'wb'))
     else:
+        if not os.path.exists('ckpt/loss_test/'):
+            os.mkdir('ckpt/loss_test/')
         json.dump(loss_save, open('ckpt/' + 'test_loss' + '_s' + str(step) + '.json', 'wb'))
 
     return total_loss
@@ -106,5 +110,9 @@ def PCK(predict, target, label_size=45, sigma=0.04):
         if dis < sigma * label_size:
             pck += 1
     return pck / float(predict.shape[0])
+
+
+
+
 
 

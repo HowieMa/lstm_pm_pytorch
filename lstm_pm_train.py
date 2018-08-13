@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 
 # multi-GPU
-device_ids = [2, 3]
+device_ids = [0, 1, 2, 3]
 
 # hyper parameter
 temporal = 5
@@ -98,7 +98,7 @@ def train():
             scheduler.step()
 
         #  ************************* save model per 10 epochs  *************************
-        if epoch % 10 == 0:
+        if epoch % 5 == 0:
             torch.save(net.state_dict(), os.path.join(args.save_dir, 'ucihand_lstm_pm{:d}.pth'.format(epoch)))
 
     print 'train done!'
