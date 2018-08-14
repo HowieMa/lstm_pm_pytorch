@@ -41,15 +41,10 @@ transform = transforms.Compose([transforms.ToTensor()])
 
 # Build dataset
 train_data = UCIHandPoseDataset(data_dir=train_data_dir, label_dir=train_label_dir, temporal=temporal, train=True)
-test_data = UCIHandPoseDataset(data_dir=test_data_dir, label_dir=test_label_dir, temporal=temporal, train=False)
-
-
 print 'Train dataset total number of images sequence is ----' + str(len(train_data))
-print 'Test  dataset total number of images sequence is ----' + str(len(test_data))
 
 # Data Loader
 train_dataset = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
-test_dataset = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
 
 # Build model
 net = CPM()
@@ -60,22 +55,19 @@ if args.cuda:
 
 def train():
     # initialize optimizer
-    optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
-    scheduler = StepLR(optimizer, step_size=40000, gamma=0.333)
-
     optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
     optimizer = nn.DataParallel(optimizer, device_ids=device_ids)  # for multi- GPU
 
     criterion = nn.MSELoss(size_average=True)                       # loss function MSE average
-
+    net.train()
     for epoch in range(args.begin_epoch, args.epochs + 1):
-        net.train()
+
         print 'epoch....................' + str(epoch)
         for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
             images = Variable(images.cuda(device_ids[0]) if args.cuda else images)               # 4D Tensor
-            # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
-            label_map = Variable(label_map.cuda(device_ids[0]) if args.cuda else label_map)      # 5D Tensor
-            # Batch_size  *  Temporal        * (joints+1) *   45 * 45
+            # Batch_size  *  3  *  width(368)  *  height(368)
+            label_map = Variable(label_map.cuda(device_ids[0]) if args.cuda else label_map)      # 4D Tensor
+            # Batch_size  *  (joints+1) *   45  *  45
             center_map = Variable(center_map.cuda(device_ids[0]) if args.cuda else center_map)   # 4D Tensor
             # Batch_size  *  1          * width(368) * height(368)
 
@@ -83,7 +75,7 @@ def train():
             predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
 
             # ******************** calculate and save loss of each joints ********************
-            total_loss = save_loss(predict_heatmaps, label_map, epoch, step, criterion, train=True, temporal=temporal)
+            #total_loss = save_loss(predict_heatmaps, label_map, epoch, step, criterion, train=True, temporal=temporal)
             if step % 10 == 0:
                 print '--step .....' + str(step)
                 print '--loss ' + str(float(total_loss.data[0]))
@@ -95,7 +87,6 @@ def train():
             # backward
             total_loss.backward()
             optimizer.module.step()
-            scheduler.step()
 
         #  ************************* save model per 10 epochs  *************************
         if epoch % 5 == 0:

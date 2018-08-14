@@ -25,7 +25,6 @@ class UCIHandPoseDataset(Dataset):
         self.temporal_dir = []
 
         self.train = train
-
         if self.train is True:
             self.gen_temporal_dir(1)
         else:

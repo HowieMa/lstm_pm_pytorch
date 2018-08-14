@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/lstm_pm_pytorch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/lstm_pm_pytorch.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpm_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/cpm_train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/handpose_data2.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lstm_pm_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_pm_train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/cpm.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/cpm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/train.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="86" column="22" selection-start-line="86" selection-start-column="12" selection-end-line="86" selection-end-column="22" />
+            <state relative-caret-position="295">
+              <caret line="99" lean-forward="true" selection-start-line="99" selection-end-line="99" />
               <folding>
                 <element signature="e#50#65#0" expanded="true" />
               </folding>
@@ -35,8 +31,8 @@
       <file leaf-file-name="handpose_data2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="27" selection-start-line="27" selection-end-line="27" />
+            <state relative-caret-position="470">
+              <caret line="154" lean-forward="true" selection-start-line="154" selection-end-line="154" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -44,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="446">
-              <caret line="73" column="62" selection-start-line="73" selection-start-column="62" selection-end-line="73" selection-end-column="62" />
+            <state relative-caret-position="219">
+              <caret line="58" column="5" selection-start-line="58" selection-end-line="58" selection-end-column="5" />
               <folding>
                 <element signature="e#7#19#0" expanded="true" />
               </folding>
@@ -56,16 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/__init__.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-313">
-              <caret line="28" column="60" selection-start-line="28" selection-start-column="52" selection-end-line="28" selection-end-column="60" />
+            <state relative-caret-position="269">
+              <caret line="27" column="49" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
               <folding>
                 <element signature="e#1#12#0" expanded="true" />
                 <element signature="e#2869#3567#0" />
@@ -77,7 +68,7 @@
       <file leaf-file-name="handpose_data_cpm.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/handpose_data_cpm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
+            <state relative-caret-position="-687">
               <caret line="11" selection-start-line="11" selection-end-line="11" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
@@ -89,8 +80,8 @@
       <file leaf-file-name="cpm_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cpm_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-715">
-              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+            <state relative-caret-position="20">
+              <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
               <folding>
                 <element signature="e#49#64#0" expanded="true" />
               </folding>
@@ -144,19 +135,17 @@
         <option value="$PROJECT_DIR$/src/__init__.py" />
         <option value="$PROJECT_DIR$/model/cpm.py" />
         <option value="$PROJECT_DIR$/data/handpose_data_cpm.py" />
-        <option value="$PROJECT_DIR$/cpm_train.py" />
-        <option value="$PROJECT_DIR$/data/handpose_data2.py" />
         <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/data/handpose_data2.py" />
         <option value="$PROJECT_DIR$/lstm_pm_train.py" />
+        <option value="$PROJECT_DIR$/cpm_train.py" />
         <option value="$PROJECT_DIR$/src/utils.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="x" value="1532" />
-    <option name="y" value="-7" />
-    <option name="width" value="1225" />
-    <option name="height" value="777" />
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+    <option name="width" value="1280" />
+    <option name="height" value="800" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -275,10 +264,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1280" y="-100" width="1600" height="900" extended-state="0" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1861938" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23351866" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.34045583" />
@@ -332,6 +321,19 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="58" column="5" selection-start-line="58" selection-end-line="58" selection-end-column="5" />
+          <folding>
+            <element signature="e#7#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/cpm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="997">
@@ -342,23 +344,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/handpose_data_cpm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cpm_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-715">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+        <state relative-caret-position="20">
+          <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
           <folding>
             <element signature="e#49#64#0" expanded="true" />
           </folding>
@@ -367,8 +356,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        <state relative-caret-position="470">
+          <caret line="154" lean-forward="true" selection-start-line="154" selection-end-line="154" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/handpose_data_cpm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-687">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -377,8 +376,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-313">
-          <caret line="28" column="60" selection-start-line="28" selection-start-column="52" selection-end-line="28" selection-end-column="60" />
+        <state relative-caret-position="269">
+          <caret line="27" column="49" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
           <folding>
             <element signature="e#1#12#0" expanded="true" />
             <element signature="e#2869#3567#0" />
@@ -388,20 +387,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="86" column="22" selection-start-line="86" selection-start-column="12" selection-end-line="86" selection-end-column="22" />
+        <state relative-caret-position="295">
+          <caret line="99" lean-forward="true" selection-start-line="99" selection-end-line="99" />
           <folding>
             <element signature="e#50#65#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="73" column="62" selection-start-line="73" selection-start-column="62" selection-end-line="73" selection-end-column="62" />
-          <folding>
-            <element signature="e#7#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

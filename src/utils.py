@@ -23,14 +23,7 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
             target = label_map[b, t, :, :, :]
             tmp_loss = criterion(predict, target)
             loss_save['batch' + str(b)]['temporal' + str(t)] = float('%.8f' % tmp_loss)
-            total_loss += tmp_loss
-
-            # for i in range(21):                             # for each joint
-            #     predict = predict_heatmaps[t][b, i, :, :]   # 2D Tensor
-            #     target = label_map[b, t, i, :, :]
-            #     tmp_loss = criterion(predict, target)  # average MSE loss
-            #     loss_save['batch' + str(b)]['temporal' + str(t)].append(float('%.8f' % tmp_loss))
-            #     total_loss += tmp_loss
+            total_loss += tmp_loss.data[0]
 
     total_loss = total_loss / (label_map.shape[0] * temporal)
     loss_save['total'] = float(total_loss.data[0])
