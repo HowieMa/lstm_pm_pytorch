@@ -20,8 +20,6 @@ device_ids = [0, 1, 2, 3]
 temporal = 5
 train_data_dir = '/home/haoyum/UCIHand/train/train_data'
 train_label_dir = '/home/haoyum/UCIHand/train/train_label'
-test_data_dir = '/home/haoyum/UCIHand/test/test_data'
-test_label_dir = '/home/haoyum/UCIHand/test/test_label'
 
 # add parameter
 parser = argparse.ArgumentParser(description='Pytorch LSTM_PM with Penn_Action')
@@ -41,30 +39,25 @@ transform = transforms.Compose([transforms.ToTensor()])
 
 # Build dataset
 train_data = UCIHandPoseDataset(data_dir=train_data_dir, label_dir=train_label_dir, temporal=temporal, train=True)
-test_data = UCIHandPoseDataset(data_dir=test_data_dir, label_dir=test_label_dir, temporal=temporal, train=False)
-
-
 print 'Train dataset total number of images sequence is ----' + str(len(train_data))
-print 'Test  dataset total number of images sequence is ----' + str(len(test_data))
 
 # Data Loader
 train_dataset = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
-test_dataset = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
 
 # Build model
 net = LSTM_PM(T=temporal)
 if args.cuda:
     net = net.cuda(device_ids[0])
-    net = nn.DataParallel(net, device_ids=device_ids)
-
+    net = nn.DataParallel(net, device_ids=device_ids)  # multi-Gpu
 
 def train():
     # initialize optimizer
-    #optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
-    #scheduler = StepLR(optimizer, step_size=40000, gamma=0.333)
+    optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
+    scheduler = StepLR(optimizer, step_size=4000, gamma=0.333)
 
-    optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, eps=1e-3, amsgrad=True)
-    #optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
+    # optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, eps=1e-3, amsgrad=True)
+    # optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
+
     optimizer = nn.DataParallel(optimizer, device_ids=device_ids)  # for multi- GPU
 
     criterion = nn.MSELoss(size_average=True)                       # loss function MSE average
@@ -96,8 +89,8 @@ def train():
 
             # backward
             total_loss.backward()
-            optimizer.module.step()
-            #scheduler.step()
+            optimizer.module.step()  # for multi-GPU
+            scheduler.step()
 
         #  ************************* save model per 10 epochs  *************************
         if epoch % 5 == 0:

@@ -2,9 +2,10 @@ import json
 import numpy as np
 import os
 import scipy.misc
+import torch.nn as nn
 
 
-def loss_history_init(bath_size = 4, temporal=5):
+def loss_history_init(bath_size=4, temporal=5):
     loss_history = {}
     for b in range(bath_size):  # each person
         loss_history['batch'+str(b)] = {}
@@ -23,7 +24,8 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
             target = label_map[b, t, :, :, :]
             tmp_loss = criterion(predict, target)
             loss_save['batch' + str(b)]['temporal' + str(t)] = float('%.8f' % tmp_loss)
-            total_loss += tmp_loss.data[0]
+
+            total_loss += tmp_loss.item()
 
     total_loss = total_loss / (label_map.shape[0] * temporal)
     loss_save['total'] = float(total_loss.data[0])
@@ -62,8 +64,8 @@ def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=
             pre = np.zeros((45, 45))  #
             gth = np.zeros((45, 45))
             for i in range(21):                             # for each joint
-                pre += predict_heatmaps[t][b, i, :, :].data.cpu().numpy()    # 2D
-                gth += label_map[b, t, i, :, :].data.cpu().numpy()           # 2D
+                pre += np.asarray(predict_heatmaps[t][b, i, :, :].data)  # 2D
+                gth += np.asarray(label_map[b, t, i, :, :].data)         # 2D
 
             output[0:45,  50 * t: 50 * t + 45] = gth
             output[50:95, 50 * t: 50 * t + 45] = pre
@@ -112,13 +114,14 @@ def PCK(predict, target, label_size=45, sigma=0.04):
 
 
 def draw_loss(epoch):
-    all_losses = os.listdir('ckpt/epoch'+str(epoch))
+    all_losses = os.listdir('ckpt/loss_epoch'+str(epoch))
     losses = []
 
     for loss_j in all_losses:
-        loss = json.load('ckpt/epoch'+str(epoch) + '/' +loss_j)
+        loss = json.load('ckpt/loss_epoch'+str(epoch) + '/' +loss_j)
         a = loss['total']
         losses.append(a)
+
 
 
 
