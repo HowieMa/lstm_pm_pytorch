@@ -63,7 +63,8 @@ def train():
     #optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
     #scheduler = StepLR(optimizer, step_size=40000, gamma=0.333)
 
-    optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
+    optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, eps=1e-3, amsgrad=True)
+    #optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
     optimizer = nn.DataParallel(optimizer, device_ids=device_ids)  # for multi- GPU
 
     criterion = nn.MSELoss(size_average=True)                       # loss function MSE average
