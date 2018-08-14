@@ -52,11 +52,11 @@ if args.cuda:
 
 def train():
     # initialize optimizer
-    optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
-    scheduler = StepLR(optimizer, step_size=4000, gamma=0.333)
+    #optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
+    #scheduler = StepLR(optimizer, step_size=4000, gamma=0.333)
 
     # optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, eps=1e-3, amsgrad=True)
-    # optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
+    optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
 
     optimizer = nn.DataParallel(optimizer, device_ids=device_ids)  # for multi- GPU
 
@@ -65,8 +65,9 @@ def train():
     net.train()
     for epoch in range(args.begin_epoch, args.epochs + 1):
 
-        print 'epoch....................' + str(epoch)
+        print 'epoch.........................' + str(epoch)
         for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
+
             images = Variable(images.cuda(device_ids[0]) if args.cuda else images)               # 4D Tensor
             # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
             label_map = Variable(label_map.cuda(device_ids[0]) if args.cuda else label_map)      # 5D Tensor
@@ -90,7 +91,7 @@ def train():
             # backward
             total_loss.backward()
             optimizer.module.step()  # for multi-GPU
-            scheduler.step()
+            # scheduler.step()
 
         #  ************************* save model per 10 epochs  *************************
         if epoch % 5 == 0:
