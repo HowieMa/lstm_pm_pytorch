@@ -19,14 +19,20 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
     total_loss = 0
     for b in range(label_map.shape[0]):                     # for each batch (person)
         for t in range(temporal):                           # for each temporal
-            for i in range(21):                             # for each joint
-                predict = predict_heatmaps[t][b, i, :, :]   # 2D Tensor
-                target = label_map[b, t, i, :, :]
-                tmp_loss = criterion(predict, target)  # average MSE loss
-                loss_save['batch' + str(b)]['temporal' + str(t)].append(float('%.8f' % tmp_loss))
-                total_loss += tmp_loss
+            predict = predict_heatmaps[t][b, :, :, :]
+            target = label_map[b, t, :, :, :]
+            tmp_loss = criterion(predict, target)
+            loss_save['batch' + str(b)]['temporal' + str(t)] = float('%.8f' % tmp_loss)
+            total_loss += tmp_loss
 
-    total_loss = total_loss / (label_map.shape[0] * temporal * 21.0)
+            # for i in range(21):                             # for each joint
+            #     predict = predict_heatmaps[t][b, i, :, :]   # 2D Tensor
+            #     target = label_map[b, t, i, :, :]
+            #     tmp_loss = criterion(predict, target)  # average MSE loss
+            #     loss_save['batch' + str(b)]['temporal' + str(t)].append(float('%.8f' % tmp_loss))
+            #     total_loss += tmp_loss
+
+    total_loss = total_loss / (label_map.shape[0] * temporal)
     loss_save['total'] = float(total_loss.data[0])
 
     if train is True:
@@ -110,6 +116,19 @@ def PCK(predict, target, label_size=45, sigma=0.04):
         if dis < sigma * label_size:
             pck += 1
     return pck / float(predict.shape[0])
+
+
+def draw_loss(epoch):
+    all_losses = os.listdir('ckpt/epoch'+str(epoch))
+    losses = []
+
+    for loss_j in all_losses:
+        loss = json.load('ckpt/epoch'+str(epoch) + '/' +loss_j)
+        a = loss['total']
+        losses.append(a)
+
+
+
 
 
 
