@@ -94,6 +94,7 @@ class UCIHandPoseDataset(Dataset):
             w, h, c = np.asarray(im).shape      # weight 256 * height 256 * 3
             ratio_x = self.width / float(w)
             ratio_y = self.height / float(h)    # 368 / 256 = 1.4375
+
             im = im.resize((self.width, self.height))                       # unit8      weight 368 * height 368 * 3
             images[(i * 3):(i * 3 + 3), :, :] = transforms.ToTensor()(im)   # 3D Tensor  3 * height 368 * weight 368
             # ToTensor function will normalize data
@@ -108,6 +109,7 @@ class UCIHandPoseDataset(Dataset):
                                        size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
+
         return images.float(), label_maps.float(), center_map.float(), imgs
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
@@ -143,12 +145,14 @@ class UCIHandPoseDataset(Dataset):
             lbl = label[i]                      # [x, y]
             x = lbl[0] * ratio_x / 8.0          # modify the label
             y = lbl[1] * ratio_y / 8.0
-            heatmap = self.genCenterMap(x, y, sigma=self.sigma, size_w=label_size, size_h=label_size)  # numpy
+            heatmap = self.genCenterMap(y, x, sigma=self.sigma, size_w=label_size, size_h=label_size)  # numpy
             background += heatmap               # numpy
             label_maps[i, :, :] = np.transpose(heatmap)  # !!!
 
         # back ground
-        label_maps[joints, :, :] = np.transpose(1 - background)
+        # label_maps[joints, :, :] = np.transpose(1 - background) !!!
+        label_maps[joints, :, :] = np.zeros((label_size, label_size))
+
         return label_maps  # numpy           label_size * label_size * (joints + 1)
 
 

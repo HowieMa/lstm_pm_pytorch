@@ -8,7 +8,7 @@ from PIL import Image
 
 
 class UCIHandPoseDataset(Dataset):
-    def __init__(self, data_dir, label_dir, temporal = 7, transform = None, sigma=1):
+    def __init__(self, data_dir, label_dir, train, temporal = 7, transform = None, sigma=1):
         self.height = 368
         self.width = 368
 
@@ -103,7 +103,7 @@ class UCIHandPoseDataset(Dataset):
             lbl = label[i]                  # [x, y]
             x = lbl[0] * ratio_x/8.0         # modify the label
             y = lbl[1] * ratio_y/8.0
-            heatmap = self.genCenterMap(x, y, sigma=self.sigma, size_w=label_size, size_h=label_size)
+            heatmap = self.genCenterMap(y, x, sigma=self.sigma, size_w=label_size, size_h=label_size)
 
             label_maps[i, :, :] = torch.from_numpy(np.transpose(heatmap))
 
