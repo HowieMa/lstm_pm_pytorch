@@ -34,11 +34,12 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
     if train is True:
         if not os.path.exists('ckpt/loss_epoch' + str(epoch)):
             os.mkdir('ckpt/loss_epoch' + str(epoch))
-        json.dump(loss_save, open('ckpt/loss_epoch' + str(epoch) + '/s' + str(step) + '.json', 'wb'))
+        json.dump(loss_save, open('ckpt/loss_epoch' + str(epoch) + '.json', 'a'))
+
     else:
         if not os.path.exists('ckpt/loss_test/'):
             os.mkdir('ckpt/loss_test/')
-        json.dump(loss_save, open('ckpt/' + 'test_loss' + '_s' + str(step) + '.json', 'wb'))
+        json.dump(loss_save, open('ckpt/' + 'test_loss.json', 'a'))
 
     return total_loss
 
