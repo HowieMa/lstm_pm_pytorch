@@ -38,6 +38,8 @@ class UCIHandPoseDataset(Dataset):
         label_path = os.path.join(self.label_dir, seq)
 
         imgs = os.listdir(image_path)
+        imgs.sort()  #
+
         labels = json.load(open(label_path + '.json'))
         img_num = len(imgs)
 
@@ -47,10 +49,12 @@ class UCIHandPoseDataset(Dataset):
 
         start_index = np.random.randint(0, img_num - self.temporal + 1)  #
 
+        imm = []
         for i in range(self.temporal):                          # get temporal images
             img = imgs[i + start_index]                         # L0005.jpg
+            imm.append(image_path + '/' + img )
             im = Image.open(image_path + '/' + img)             # read image
-            #set_trace()
+
             w, h, c = np.asarray(im).shape                                  # 256 * 256 * 3
             ratio_x = self.width / float(w)
             ratio_y = self.height / float(h)                    # 368 / 256 = 1.4375
@@ -66,8 +70,7 @@ class UCIHandPoseDataset(Dataset):
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
   
-        return images.float(), label_maps.float(), center_map.float()
-
+        return images.float(), label_maps.float(), center_map.float(), imm
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
         '''

@@ -19,13 +19,14 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
     loss_save = loss_history_init(bath_size=label_map.shape[0], temporal=temporal)
     total_loss = 0
     for b in range(label_map.shape[0]):                     # for each batch (person)
+
         for t in range(temporal):                           # for each temporal
             predict = predict_heatmaps[t][b, :, :, :]
             target = label_map[b, t, :, :, :]
             tmp_loss = criterion(predict, target)
             loss_save['batch' + str(b)]['temporal' + str(t)] = float('%.8f' % tmp_loss)
 
-            total_loss += tmp_loss.item()
+            total_loss += tmp_loss
 
     total_loss = total_loss / (label_map.shape[0] * temporal)
     loss_save['total'] = float(total_loss.data[0])
@@ -55,7 +56,7 @@ def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=
     """
 
     for b in range(label_map.shape[0]):                     # for each batch (person)
-        output = np.zeros((50 * 2, 50 * temporal))           # cd .. temporal save a single image
+        output = np.ones((50 * 2, 50 * temporal))           # cd .. temporal save a single image
         seq = imgs[0][b].split('/')[-2]                     # sequence name 001L0
         img = ""
         for t in range(temporal):                           # for each temporal

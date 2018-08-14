@@ -88,6 +88,7 @@ class UCIHandPoseDataset(Dataset):
 
         for i in range(self.temporal):          # get temporal images
             img = imgs[i]                       # '.../001L0/L0005.jpg'
+
             # get image
             im = Image.open(img)                # read image
             w, h, c = np.asarray(im).shape      # weight 256 * height 256 * 3
@@ -134,7 +135,7 @@ class UCIHandPoseDataset(Dataset):
         :return:  heatmap           numpy           (joints+1) * boxsize/stride * boxsize/stride
         """
         # initialize
-        label_maps = np.zeros((joints + 1, label_size, label_size ))
+        label_maps = np.zeros((joints + 1, label_size, label_size))
         background = np.zeros((label_size, label_size))
 
         # each joint
@@ -144,10 +145,10 @@ class UCIHandPoseDataset(Dataset):
             y = lbl[1] * ratio_y / 8.0
             heatmap = self.genCenterMap(x, y, sigma=self.sigma, size_w=label_size, size_h=label_size)  # numpy
             background += heatmap               # numpy
-            label_maps[i, :, :] = heatmap
+            label_maps[i, :, :] = np.transpose(heatmap)  # !!!
 
         # back ground
-        label_maps[joints, :, :] = 1 - background
+        label_maps[joints, :, :] = np.transpose(1 - background)
         return label_maps  # numpy           label_size * label_size * (joints + 1)
 
 
