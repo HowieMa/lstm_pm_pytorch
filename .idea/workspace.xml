@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/ckpt/draw_loss.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/ckpt/draw_loss.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/handpose_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lstm_pm_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_pm_train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,11 +15,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="57" column="4" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="4" />
+            <state relative-caret-position="226">
+              <caret line="58" column="26" selection-start-line="58" selection-start-column="22" selection-end-line="58" selection-end-column="26" />
               <folding>
                 <element signature="e#50#65#0" expanded="true" />
               </folding>
@@ -30,8 +30,20 @@
       <file leaf-file-name="adam.py" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/torch/optim/adam.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="29" column="40" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="40" />
+            <state relative-caret-position="515">
+              <caret line="83" column="36" selection-start-line="83" selection-start-column="31" selection-end-line="83" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="handpose_data.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/data/handpose_data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="344">
+              <caret line="25" column="16" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -39,8 +51,8 @@
       <file leaf-file-name="handpose_data2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="467">
-              <caret line="139" column="34" lean-forward="true" selection-start-line="139" selection-start-column="34" selection-end-line="139" selection-end-column="34" />
+            <state relative-caret-position="322">
+              <caret line="49" column="12" lean-forward="true" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="39" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -63,8 +75,8 @@
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="23" lean-forward="true" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+            <state relative-caret-position="440">
+              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -128,6 +140,7 @@
       <find>save</find>
       <find>temporals</find>
       <find>device</find>
+      <find>amsgrad</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -144,10 +157,10 @@
         <option value="$PROJECT_DIR$/data/handpose_data_cpm.py" />
         <option value="$PROJECT_DIR$/cpm_train.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/data/handpose_data.py" />
         <option value="$PROJECT_DIR$/data/handpose_data2.py" />
         <option value="$PROJECT_DIR$/src/utils.py" />
         <option value="$PROJECT_DIR$/lstm_pm_train.py" />
+        <option value="$PROJECT_DIR$/data/handpose_data.py" />
       </list>
     </option>
   </component>
@@ -334,26 +347,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/handpose_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1165">
-          <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="467">
-          <caret line="139" column="34" lean-forward="true" selection-start-line="139" selection-start-column="34" selection-end-line="139" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-237">
@@ -394,17 +387,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/torch/optim/adam.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="29" column="40" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="23" lean-forward="true" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+        <state relative-caret-position="440">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
@@ -413,10 +399,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="57" column="4" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="4" />
+        <state relative-caret-position="226">
+          <caret line="58" column="26" selection-start-line="58" selection-start-column="22" selection-end-line="58" selection-end-column="26" />
           <folding>
             <element signature="e#50#65#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/torch/optim/adam.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="515">
+          <caret line="83" column="36" selection-start-line="83" selection-start-column="31" selection-end-line="83" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="49" column="12" lean-forward="true" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/handpose_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="25" column="16" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>

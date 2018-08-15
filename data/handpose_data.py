@@ -13,6 +13,17 @@ class UCIHandPoseDataset(Dataset):
         self.width = 368
 
         self.seqs = os.listdir(data_dir)    # L00, L01, L02,... , R01, R02, R03,...
+
+        for seq in self.seqs:
+
+            image_path = os.path.join(self.data_dir, seq)  #
+            imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
+            imgs.sort()
+
+            img_num = len(imgs)
+            if img_num < self.temporal:
+                self.seqs.remove(seq)
+
         self.data_dir = data_dir
         self.label_dir = label_dir
         self.temporal = temporal
