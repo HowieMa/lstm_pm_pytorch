@@ -23,7 +23,7 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
         total_loss += tmp_loss
         loss_save['temporal' + str(t)] = float('%.8f' % tmp_loss)
 
-    total_loss = total_loss / (label_map.shape[0] * temporal)
+    total_loss = total_loss
     loss_save['total'] = float(total_loss)
 
     # save loss to file
