@@ -18,15 +18,23 @@ def loss_history_init(bath_size=4, temporal=5):
 def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, temporal=5):
     loss_save = loss_history_init(bath_size=label_map.shape[0], temporal=temporal)
     total_loss = 0
-    for b in range(label_map.shape[0]):                     # for each batch (person)
 
-        for t in range(temporal):                           # for each temporal
-            predict = predict_heatmaps[t][b, :, :, :]
-            target = label_map[b, t, :, :, :]
-            tmp_loss = criterion(predict, target)
-            loss_save['batch' + str(b)]['temporal' + str(t)] = float('%.8f' % tmp_loss)
+    for t in range(temporal):
+        predict = predict_heatmaps[t]
+        target = label_map[:, t, :, :, :]
+        tmp_loss = criterion(predict, target)
+        total_loss += tmp_loss
 
-            total_loss += tmp_loss
+    # for b in range(label_map.shape[0]):                     # for each batch (person)
+    #
+    #     tmp_loss = criterion(predict, target)
+    #     for t in range(temporal):                           # for each temporal
+    #         predict = predict_heatmaps[t][b, :, :, :]
+    #         target = label_map[b, t, :, :, :]
+    #         tmp_loss = criterion(predict, target)
+    #         loss_save['batch' + str(b)]['temporal' + str(t)] = float('%.8f' % tmp_loss)
+    #
+    #         total_loss += tmp_loss
 
     total_loss = total_loss / (label_map.shape[0] * temporal)
     loss_save['total'] = float(total_loss)
