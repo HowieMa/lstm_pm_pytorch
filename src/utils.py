@@ -29,17 +29,17 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
             total_loss += tmp_loss
 
     total_loss = total_loss / (label_map.shape[0] * temporal)
-    loss_save['total'] = float(total_loss.data[0])
+    loss_save['total'] = float(total_loss)
 
     if train is True:
         if not os.path.exists('ckpt/loss_epoch' + str(epoch)):
             os.mkdir('ckpt/loss_epoch' + str(epoch))
-        json.dump(loss_save, open('ckpt/loss_epoch' + str(epoch) + '.json', 'a'))
+        json.dump(loss_save, open('ckpt/loss_epoch' + str(epoch) + '/s' + str(step).zfill(4) + '.json', 'wb'))
 
     else:
         if not os.path.exists('ckpt/loss_test/'):
             os.mkdir('ckpt/loss_test/')
-        json.dump(loss_save, open('ckpt/' + 'test_loss.json', 'a'))
+        json.dump(loss_save, open('ckpt/' + 'test_loss/'+ str(step).zfill(4) + '.json', 'wb'))
 
     return total_loss
 

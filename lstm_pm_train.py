@@ -82,7 +82,7 @@ def train():
             total_loss = save_loss(predict_heatmaps, label_map, epoch, step, criterion, train=True, temporal=temporal)
             if step % 10 == 0:
                 print '--step .....' + str(step)
-                print '--loss ' + str(float(total_loss.data[0]))
+                print '--loss ' + str(float(total_loss))
 
             # ******************** save training heat maps per 100 steps ********************
             if step % 100 == 0:
