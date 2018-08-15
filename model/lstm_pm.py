@@ -202,11 +202,12 @@ class LSTM_PM(nn.Module):
             heat_maps.append(heatmap)
         return heat_maps
 
+
 # test case
-net = LSTM_PM(T=4)
-a = torch.randn(4, 3, 368, 368)
-c = torch.randn(1, 368, 368)
-maps = net(a, c)
-for m in maps:
-   print m.shape
+# net = LSTM_PM(T=4)
+# a = torch.randn(4, 3, 368, 368)
+# c = torch.randn(1, 368, 368)
+# maps = net(a, c)
+# for m in maps:
+#    print m.shape
 

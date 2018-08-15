@@ -57,7 +57,7 @@ class UCIHandPoseDataset(Dataset):
 
         # initialize
         images = torch.zeros(self.temporal * 3, self.width, self.height)
-        label_maps = torch.zeros(self.temporal, self.joints + 1, label_size, label_size)
+        label_maps = torch.zeros(self.temporal, self.joints, label_size, label_size)
 
         start_index = np.random.randint(0, img_num - self.temporal + 1)  #
 
@@ -109,7 +109,7 @@ class UCIHandPoseDataset(Dataset):
         :return: heatmap        Tensor          (joints+1) * boxsize/stride * boxsize/stride
         '''
         #print label_size
-        label_maps = torch.zeros(joints + 1, label_size, label_size)  # Tensor
+        label_maps = torch.zeros(joints, label_size, label_size)  # Tensor
 
         for i in range(len(label)):
             lbl = label[i]                  # [x, y]
@@ -119,7 +119,7 @@ class UCIHandPoseDataset(Dataset):
 
             label_maps[i, :, :] = torch.from_numpy(np.transpose(heatmap))
 
-        label_maps[joints, :, :] = torch.from_numpy(np.transpose(heatmap))  # !!!
+        #label_maps[joints, :, :] = torch.from_numpy(np.transpose(heatmap))  # !!!
         return label_maps                       # Tensor          (joints + 1) * boxsize/stride * boxsize/stride
 
 
