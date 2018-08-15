@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/ckpt/draw_loss.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/ckpt/draw_loss.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/handpose_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/handpose_data2.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lstm_pm_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_pm_train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/train-checkpoint.ipynb" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,14 +13,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="11" lean-forward="true" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
+            <state>
+              <caret column="48" selection-start-column="48" selection-end-column="48" />
               <folding>
                 <element signature="e#49#64#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="15" column="19" lean-forward="true" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -105,18 +110,6 @@
               <caret line="10" selection-start-line="10" selection-end-line="10" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cpm_train.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cpm_train.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1020">
-              <caret line="80" column="54" selection-start-line="80" selection-start-column="44" selection-end-line="80" selection-end-column="54" />
-              <folding>
-                <element signature="e#49#64#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -203,16 +196,6 @@
             <path>
               <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
               <item name="lstm_pm_pytorch" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lstm_pm_pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="ckpt" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lstm_pm_pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
@@ -463,9 +446,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/util/utils.py" />
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -565,11 +545,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="11" lean-forward="true" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
+        <state>
+          <caret column="48" selection-start-column="48" selection-end-column="48" />
           <folding>
             <element signature="e#49#64#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="19" lean-forward="true" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
         </state>
       </provider>
     </entry>
