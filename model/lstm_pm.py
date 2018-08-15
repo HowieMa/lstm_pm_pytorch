@@ -21,7 +21,7 @@ class LSTM_PM(nn.Module):
         self.conv4_convnet1 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
         self.conv5_convnet1 = nn.Conv2d(32, 512, kernel_size=9, padding=4)
         self.conv6_convnet1 = nn.Conv2d(512, 512, kernel_size=1)
-        self.conv7_convnet1 = nn.Conv2d(512, self.outclass + 1, kernel_size=1)  # 512 * 45 * 45
+        self.conv7_convnet1 = nn.Conv2d(512, self.outclass , kernel_size=1)  # 512 * 45 * 45
 
         # conv_net2
         self.conv1_convnet2 = nn.Conv2d(3, 128, kernel_size=9, padding=4)  # 3 * 368 * 368
@@ -37,7 +37,7 @@ class LSTM_PM(nn.Module):
         self.Mconv2_convnet3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_convnet3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_convnet3 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
-        self.Mconv5_convnet3 = nn.Conv2d(128, self.outclass + 1, kernel_size=1, padding=0)
+        self.Mconv5_convnet3 = nn.Conv2d(128, self.outclass, kernel_size=1, padding=0)
 
         # lstm
         self.conv_ix_lstm = nn.Conv2d(32 + 2 + self.outclass, 48, kernel_size=3, padding=1, bias=True)

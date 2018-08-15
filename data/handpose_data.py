@@ -14,6 +14,13 @@ class UCIHandPoseDataset(Dataset):
 
         self.seqs = os.listdir(data_dir)    # L00, L01, L02,... , R01, R02, R03,...
 
+        self.data_dir = data_dir
+        self.label_dir = label_dir
+        self.temporal = temporal
+        self.transform = transform
+        self.joints = 21                    # 21 heat maps
+        self.sigma = sigma
+
         for seq in self.seqs:
 
             image_path = os.path.join(self.data_dir, seq)  #
@@ -24,12 +31,6 @@ class UCIHandPoseDataset(Dataset):
             if img_num < self.temporal:
                 self.seqs.remove(seq)
 
-        self.data_dir = data_dir
-        self.label_dir = label_dir
-        self.temporal = temporal
-        self.transform = transform
-        self.joints = 21                    # 21 heat maps
-        self.sigma=sigma
 
     def __len__(self):
         return len(self.seqs)
