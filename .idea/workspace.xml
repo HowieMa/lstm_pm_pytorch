@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/ckpt/draw_loss.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/ckpt/draw_loss.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/handpose_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/handpose_data2.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lstm_pm_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_pm_train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -13,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="2" selection-start-column="2" selection-end-column="48" />
+            <state relative-caret-position="210">
+              <caret line="14" column="11" lean-forward="true" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
               <folding>
                 <element signature="e#49#64#0" expanded="true" />
               </folding>
@@ -25,11 +29,20 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="draw_loss.ipynb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ckpt/draw_loss.ipynb">
+          <provider selected="true" editor-type-id="ipnb-editor">
+            <state>
+              <selected id="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="lstm_pm.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/lstm_pm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="120" column="21" selection-start-line="120" selection-start-column="21" selection-end-line="120" selection-end-column="21" />
+            <state relative-caret-position="-209">
+              <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -40,8 +53,8 @@
       <file leaf-file-name="handpose_data.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/handpose_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+            <state relative-caret-position="224">
+              <caret line="41" column="64" lean-forward="true" selection-start-line="41" selection-start-column="64" selection-end-line="41" selection-end-column="64" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -52,8 +65,8 @@
       <file leaf-file-name="handpose_data2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="39">
-              <caret line="85" column="33" selection-start-line="85" selection-start-column="33" selection-end-line="85" selection-end-column="33" />
+            <state relative-caret-position="765">
+              <caret line="51" lean-forward="true" selection-start-line="51" selection-end-line="51" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -64,8 +77,8 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="32" column="51" selection-start-line="32" selection-start-column="51" selection-end-line="32" selection-end-column="51" />
+            <state relative-caret-position="-149">
+              <caret line="26" column="10" lean-forward="true" selection-start-line="26" selection-start-column="10" selection-end-line="26" selection-end-column="10" />
               <folding>
                 <element signature="e#7#19#0" expanded="true" />
               </folding>
@@ -73,11 +86,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="300">
+              <caret line="20" column="41" lean-forward="true" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="41" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -161,11 +174,12 @@
         <option value="$PROJECT_DIR$/data/handpose_data_cpm.py" />
         <option value="$PROJECT_DIR$/cpm_train.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/data/handpose_data2.py" />
         <option value="$PROJECT_DIR$/model/lstm_pm.py" />
-        <option value="$PROJECT_DIR$/lstm_pm_train.py" />
-        <option value="$PROJECT_DIR$/data/handpose_data.py" />
+        <option value="$PROJECT_DIR$/ckpt/draw_loss.ipynb" />
         <option value="$PROJECT_DIR$/src/utils.py" />
+        <option value="$PROJECT_DIR$/data/handpose_data.py" />
+        <option value="$PROJECT_DIR$/data/handpose_data2.py" />
+        <option value="$PROJECT_DIR$/lstm_pm_train.py" />
       </list>
     </option>
   </component>
@@ -189,6 +203,11 @@
             <path>
               <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
               <item name="lstm_pm_pytorch" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lstm_pm_pytorch" type="462c0819:PsiDirectoryNode" />
+              <item name="ckpt" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
@@ -450,16 +469,6 @@
     <entry file="file://$PROJECT_DIR$/src/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="32" column="51" selection-start-line="32" selection-start-column="51" selection-end-line="32" selection-end-column="51" />
-          <folding>
-            <element signature="e#7#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cpm_train.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1020">
@@ -497,20 +506,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/lstm_pm.py">
+    <entry file="file://$PROJECT_DIR$/src/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="120" column="21" selection-start-line="120" selection-start-column="21" selection-end-line="120" selection-end-column="21" />
+        <state relative-caret-position="300">
+          <caret line="20" column="41" lean-forward="true" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="41" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-149">
+          <caret line="26" column="10" lean-forward="true" selection-start-line="26" selection-start-column="10" selection-end-line="26" selection-end-column="10" />
+          <folding>
+            <element signature="e#7#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39">
-          <caret line="85" column="33" selection-start-line="85" selection-start-column="33" selection-end-line="85" selection-end-column="33" />
+        <state relative-caret-position="765">
+          <caret line="51" lean-forward="true" selection-start-line="51" selection-end-line="51" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -519,30 +538,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data/handpose_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+        <state relative-caret-position="224">
+          <caret line="41" column="64" lean-forward="true" selection-start-line="41" selection-start-column="64" selection-end-line="41" selection-end-column="64" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
+    <entry file="file://$PROJECT_DIR$/model/lstm_pm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="2" selection-start-column="2" selection-end-column="48" />
+        <state relative-caret-position="-209">
+          <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
           <folding>
-            <element signature="e#49#64#0" expanded="true" />
+            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils.py">
+    <entry file="file://$PROJECT_DIR$/ckpt/draw_loss.ipynb">
+      <provider selected="true" editor-type-id="ipnb-editor">
+        <state>
+          <selected id="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="210">
+          <caret line="14" column="11" lean-forward="true" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#49#64#0" expanded="true" />
           </folding>
         </state>
       </provider>

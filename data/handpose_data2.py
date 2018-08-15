@@ -71,7 +71,7 @@ class UCIHandPoseDataset(Dataset):
         :param idx:
         :return:
         images          3D Tensor      (temporal * 3)   *   height(368)   *   weight(368)
-        label_map       4D Tensor      temporal         *   (joints + 1)  *   label_size(45)   *   label_size(45)
+        label_map       4D Tensor      temporal         *   joints        *   label_size(45)   *   label_size(45)
         center_map      3D Tensor      1                *   height(368)   *   weight(368)
         """
         label_size = self.width / 8 - 1         # 45
@@ -134,7 +134,7 @@ class UCIHandPoseDataset(Dataset):
         :param joints:              int             21
         :param ratio_x:             float           1.4375
         :param ratio_y:             float           1.4375
-        :return:  heatmap           numpy           (joints+1) * boxsize/stride * boxsize/stride
+        :return:  heatmap           numpy           joints * boxsize/stride * boxsize/stride
         """
         # initialize
         label_maps = np.zeros((joints, label_size, label_size))
@@ -168,5 +168,5 @@ class UCIHandPoseDataset(Dataset):
 # a = dataset.temporal_dir
 # images, label_maps,center_map =  dataset[2]
 # print images.shape  # (5*3) * 368 * 368
-# print label_maps.shape  # 5 22 45 45
+# print label_maps.shape  # 5 21 45 45
 #

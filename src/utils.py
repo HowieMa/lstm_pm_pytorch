@@ -2,21 +2,18 @@ import json
 import numpy as np
 import os
 import scipy.misc
-import torch.nn as nn
 
 
-def loss_history_init(bath_size=4, temporal=5):
+def loss_history_init(temporal=5):
     loss_history = {}
-    for b in range(bath_size):  # each person
-        loss_history['batch'+str(b)] = {}
-        for t in range(temporal):
-            loss_history['batch'+str(b)]['temporal'+str(t)] = []
+    for t in range(temporal):
+        loss_history['temporal'+str(t)] = []
     loss_history['total'] = 0.0
     return loss_history
 
 
-def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, temporal=5):
-    loss_save = loss_history_init(bath_size=label_map.shape[0], temporal=temporal)
+def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, temporal=5, save_dir='ckpt/'):
+    loss_save = loss_history_init(temporal=temporal)
     total_loss = 0
 
     for t in range(temporal):
@@ -24,30 +21,21 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
         target = label_map[:, t, :, :, :]
         tmp_loss = criterion(predict, target)
         total_loss += tmp_loss
-
-    # for b in range(label_map.shape[0]):                     # for each batch (person)
-    #
-    #     tmp_loss = criterion(predict, target)
-    #     for t in range(temporal):                           # for each temporal
-    #         predict = predict_heatmaps[t][b, :, :, :]
-    #         target = label_map[b, t, :, :, :]
-    #         tmp_loss = criterion(predict, target)
-    #         loss_save['batch' + str(b)]['temporal' + str(t)] = float('%.8f' % tmp_loss)
-    #
-    #         total_loss += tmp_loss
+        loss_save['temporal' + str(t)] = float('%.8f' % tmp_loss)
 
     total_loss = total_loss / (label_map.shape[0] * temporal)
     loss_save['total'] = float(total_loss)
 
+    # save loss to file
     if train is True:
-        if not os.path.exists('ckpt/loss_epoch' + str(epoch)):
-            os.mkdir('ckpt/loss_epoch' + str(epoch))
-        json.dump(loss_save, open('ckpt/loss_epoch' + str(epoch) + '/s' + str(step).zfill(4) + '.json', 'wb'))
+        if not os.path.exists(save_dir + 'loss_epoch' + str(epoch)):
+            os.mkdir(save_dir + 'loss_epoch' + str(epoch))
+        json.dump(loss_save, open(save_dir + 'loss_epoch' + str(epoch) + '/s' + str(step).zfill(4) + '.json', 'wb'))
 
     else:
-        if not os.path.exists('ckpt/loss_test/'):
-            os.mkdir('ckpt/loss_test/')
-        json.dump(loss_save, open('ckpt/' + 'test_loss/'+ str(step).zfill(4) + '.json', 'wb'))
+        if not os.path.exists(save_dir + 'loss_test/'):
+            os.mkdir(save_dir + 'loss_test/')
+        json.dump(loss_save, open(save_dir + 'loss_test/' + str(step).zfill(4) + '.json', 'wb'))
 
     return total_loss
 

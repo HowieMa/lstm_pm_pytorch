@@ -22,7 +22,6 @@ class UCIHandPoseDataset(Dataset):
         self.sigma = sigma
 
         for seq in self.seqs:
-
             image_path = os.path.join(self.data_dir, seq)  #
             imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
             imgs.sort()
@@ -30,7 +29,6 @@ class UCIHandPoseDataset(Dataset):
             img_num = len(imgs)
             if img_num < self.temporal:
                 self.seqs.remove(seq)
-
 
     def __len__(self):
         return len(self.seqs)
@@ -81,7 +79,7 @@ class UCIHandPoseDataset(Dataset):
                                        size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
-  
+
         return images.float(), label_maps.float(), center_map.float(), imm
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
