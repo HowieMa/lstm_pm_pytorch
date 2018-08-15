@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/ckpt/draw_loss.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/ckpt/draw_loss.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/handpose_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/handpose_data2.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lstm_pm_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_pm_train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/lstm_pm.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/lstm_pm.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,11 +13,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lstm_pm_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="134">
-              <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
+            <state>
+              <caret column="2" selection-start-column="2" selection-end-column="48" />
               <folding>
                 <element signature="e#50#65#0" expanded="true" />
               </folding>
@@ -29,11 +25,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lstm_pm.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lstm_pm.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/lstm_pm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1515">
-              <caret line="101" column="40" lean-forward="true" selection-start-line="101" selection-start-column="40" selection-end-line="101" selection-end-column="40" />
+            <state relative-caret-position="293">
+              <caret line="57" column="45" selection-start-line="57" selection-start-column="45" selection-end-line="57" selection-end-column="45" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -65,8 +61,8 @@
       <file leaf-file-name="handpose_data2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1725">
-              <caret line="115" column="11" lean-forward="true" selection-start-line="115" selection-start-column="11" selection-end-line="115" selection-end-column="11" />
+            <state relative-caret-position="934">
+              <caret line="102" column="48" lean-forward="true" selection-start-line="102" selection-start-column="48" selection-end-line="102" selection-end-column="48" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -155,9 +151,9 @@
       <find>temporals</find>
       <find>device</find>
       <find>amsgrad</find>
-      <find>outclass</find>
       <find>joints</find>
       <find>21</find>
+      <find>outclass</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -175,9 +171,9 @@
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/src/utils.py" />
         <option value="$PROJECT_DIR$/data/handpose_data.py" />
-        <option value="$PROJECT_DIR$/model/lstm_pm.py" />
         <option value="$PROJECT_DIR$/data/handpose_data2.py" />
         <option value="$PROJECT_DIR$/lstm_pm_train.py" />
+        <option value="$PROJECT_DIR$/model/lstm_pm.py" />
       </list>
     </option>
   </component>
@@ -252,7 +248,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.handpose_data2">
+  <component name="RunManager" selected="Python.lstm_pm">
     <configuration name="handpose_data2" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lstm_pm_pytorch" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -266,6 +262,24 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data/handpose_data2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="lstm_pm" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="lstm_pm_pytorch" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/lstm_pm.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -292,9 +306,11 @@
     <list>
       <item itemvalue="Python.lstm_pm_train" />
       <item itemvalue="Python.handpose_data2" />
+      <item itemvalue="Python.lstm_pm" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.lstm_pm" />
         <item itemvalue="Python.handpose_data2" />
         <item itemvalue="Python.lstm_pm_train" />
       </list>
@@ -317,13 +333,13 @@
     <frame x="1280" y="-100" width="1600" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1861938" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1861938" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32917705" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.34045583" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.340399" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Python Console" order="7" visible="true" weight="0.32917705" />
+      <window_info anchor="bottom" id="Python Console" order="7" weight="0.32917705" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32905984" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
@@ -421,32 +437,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/lstm_pm.py">
+    <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1515">
-          <caret line="101" column="40" lean-forward="true" selection-start-line="101" selection-start-column="40" selection-end-line="101" selection-end-column="40" />
+        <state>
+          <caret column="2" selection-start-column="2" selection-end-column="48" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#50#65#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/handpose_data2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1725">
-          <caret line="115" column="11" lean-forward="true" selection-start-line="115" selection-start-column="11" selection-end-line="115" selection-end-column="11" />
+        <state relative-caret-position="934">
+          <caret line="102" column="48" lean-forward="true" selection-start-line="102" selection-start-column="48" selection-end-line="102" selection-end-column="48" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
+    <entry file="file://$PROJECT_DIR$/model/lstm_pm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
+        <state relative-caret-position="293">
+          <caret line="57" column="45" selection-start-line="57" selection-start-column="45" selection-end-line="57" selection-end-column="45" />
           <folding>
-            <element signature="e#50#65#0" expanded="true" />
+            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>

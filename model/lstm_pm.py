@@ -40,22 +40,22 @@ class LSTM_PM(nn.Module):
         self.Mconv5_convnet3 = nn.Conv2d(128, self.outclass, kernel_size=1, padding=0)
 
         # lstm
-        self.conv_ix_lstm = nn.Conv2d(32 + 2 + self.outclass, 48, kernel_size=3, padding=1, bias=True)
+        self.conv_ix_lstm = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1, bias=True)
         self.conv_ih_lstm = nn.Conv2d(48, 48, kernel_size=3, padding=1, bias=False)
 
-        self.conv_fx_lstm = nn.Conv2d(32 + 2 + self.outclass, 48, kernel_size=3, padding=1, bias=True)
+        self.conv_fx_lstm = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1, bias=True)
         self.conv_fh_lstm = nn.Conv2d(48, 48, kernel_size=3, padding=1, bias=False)
 
-        self.conv_ox_lstm = nn.Conv2d(32 + 2 + self.outclass, 48, kernel_size=3, padding=1, bias=True)
+        self.conv_ox_lstm = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1, bias=True)
         self.conv_oh_lstm = nn.Conv2d(48, 48, kernel_size=3, padding=1, bias=False)
 
-        self.conv_gx_lstm = nn.Conv2d(32 + 2 + self.outclass, 48, kernel_size=3, padding=1, bias=True)
+        self.conv_gx_lstm = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1, bias=True)
         self.conv_gh_lstm = nn.Conv2d(48, 48, kernel_size=3, padding=1, bias=False)
 
         # initial lstm
-        self.conv_gx_lstm0 = nn.Conv2d(32 + 2 + self.outclass, 48, kernel_size=3, padding=1)
-        self.conv_ix_lstm0 = nn.Conv2d(32 + 2 + self.outclass, 48, kernel_size=3, padding=1)
-        self.conv_ox_lstm0 = nn.Conv2d(32 + 2 + self.outclass, 48, kernel_size=3, padding=1)
+        self.conv_gx_lstm0 = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1)
+        self.conv_ix_lstm0 = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1)
+        self.conv_ox_lstm0 = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1)
 
     def convnet1(self, image):
         '''
@@ -202,11 +202,11 @@ class LSTM_PM(nn.Module):
             heat_maps.append(heatmap)
         return heat_maps
 
-## test case
-#net = LSTM_PM(T=4)
-#a = torch.randn(4, 3, 368, 368)
-#c = torch.randn(1, 368, 368)
-#maps = net(a, c)
-#for m in maps:
-#    print m.shape
+# test case
+net = LSTM_PM(T=4)
+a = torch.randn(4, 3, 368, 368)
+c = torch.randn(1, 368, 368)
+maps = net(a, c)
+for m in maps:
+   print m.shape
 
