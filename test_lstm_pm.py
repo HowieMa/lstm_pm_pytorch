@@ -4,11 +4,12 @@ from torch.utils.data import DataLoader
 
 from data.handpose_data2 import UCIHandPoseDataset
 from model.lstm_pm import LSTM_PM
+from src.utils import *
 
 import argparse
+import pandas as pd
 
 from torch.autograd import Variable
-from src.utils import *
 from collections import OrderedDict
 
 # add parameter
@@ -24,10 +25,10 @@ args = parser.parse_args()
 
 
 # hyper parameter
-model = 10
+model = 30
 temporal = 5
-test_data_dir = '/home/haoyum/UCIHand/test/test_data'
-test_label_dir = '/home/haoyum/UCIHand/test/test_label'
+test_data_dir = '/mnt/data/haoyum/UCIHand/test/test_data'
+test_label_dir = '/mnt/data/haoyum/UCIHand/test/test_label'
 
 # load data
 test_data = UCIHandPoseDataset(data_dir=test_data_dir, label_dir=test_label_dir, temporal=temporal, train=False)
@@ -56,32 +57,44 @@ net.load_state_dict(new_state_dict)
 
 net.eval()
 print '********* test data *********'
-sigma = 0.04
+sigma = 0.0
+results = []
+for i in range(10):
+    sigma += 0.1
+    result = []
+    result.append(sigma)
+    pck_all = []
+    for step, (images, label_map, center_map, imgs) in enumerate(test_dataset):
 
-pck_all = []
-for step, (images, label_map, center_map, imgs) in enumerate(test_dataset):
+        images = Variable(images.cuda() if args.cuda else images)  # 4D Tensor
+        # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
+        label_map = Variable(label_map.cuda() if args.cuda else label_map)  # 5D Tensor
+        # Batch_size  *  Temporal        * (joints+1) *   45 * 45
+        center_map = Variable(center_map.cuda() if args.cuda else center_map)  # 4D Tensor
+        # Batch_size  *  1          * width(368) * height(368)
 
-    images = Variable(images.cuda() if args.cuda else images)  # 4D Tensor
-    # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
-    label_map = Variable(label_map.cuda() if args.cuda else label_map)  # 5D Tensor
-    # Batch_size  *  Temporal        * (joints+1) *   45 * 45
-    center_map = Variable(center_map.cuda() if args.cuda else center_map)  # 4D Tensor
-    # Batch_size  *  1          * width(368) * height(368)
+        predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
 
-    predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
+        # calculate pck
+        pck = lstm_pm_evaluation(label_map, predict_heatmaps, sigma=sigma, temporal=temporal)
+        pck_all.append(pck)
 
-    # calculate pck
-    pck = evaluation(label_map, predict_heatmaps, sigma=sigma)
-    pck_all.append(pck)
+        if step % 100 == 0:
+            print '--step ...' + str(step)
+            print '--pck.....' + str(pck)
 
-    if step % 10 == 0:
-        print '--step ...' + str(step)
-        print '--pck.....' + str(pck)
+        save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train=False, temporal=5)
 
-    save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train = False, temporal=5)
+    print 'sigma ==========> ' + str(sigma)
+    print '===PCK evaluation in test dataset is ' + str(sum(pck_all) / len(pck_all))
+    result.append(str(sum(pck_all) / len(pck_all)))
+    results.append(result)
 
-print 'sigma ==========> ' + str(sigma)
-print 'PCK evaluation in test dataset is ' + str(sum(pck_all) / len(pck_all))
+
+results = pd.DataFrame(results)
+results.to_csv('ckpt/' + str(model) + 'test_pck.csv')
+
+
 
 
 

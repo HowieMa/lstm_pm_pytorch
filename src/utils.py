@@ -40,7 +40,7 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
     return total_loss
 
 
-def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=5):
+def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=5, save_dir = 'ckpt/'):
     """
     :param label_map:
     :param predict_heatmaps:    5D Tensor    Batch_size  *  Temporal * (joints+1) *   45 * 45
@@ -69,17 +69,17 @@ def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=
             output[50:95, 50 * t: 50 * t + 45] = pre
 
         if train is True:
-            if not os.path.exists('ckpt/epoch'+str(epoch)):
-                os.mkdir('ckpt/epoch'+str(epoch))
-            scipy.misc.imsave('ckpt/epoch'+str(epoch) + '/s'+str(step) + '_b' + str(b) + '_' + seq + img + '.jpg', output)
+            if not os.path.exists(save_dir + 'epoch'+str(epoch)):
+                os.mkdir(save_dir + 'epoch'+str(epoch))
+            scipy.misc.imsave(save_dir + 'epoch'+str(epoch) + '/s'+str(step) + '_b' + str(b) + '_' + seq + img + '.jpg', output)
         else:
 
-            if not os.path.exists('ckpt/test'):
-                os.mkdir('ckpt/test')
-            scipy.misc.imsave('ckpt/test' + '/s' + str(step) + '_b' + str(b) + '_' + seq + img + '.jpg', output)
+            if not os.path.exists(save_dir + 'test'):
+                os.mkdir(save_dir + 'test')
+            scipy.misc.imsave(save_dir + 'test' + '/s' + str(step) + '_b' + str(b) + '_' + seq + img + '.jpg', output)
 
 
-def evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
+def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
     pck_eval = []
     for b in range(label_map.shape[0]):        # for each batch (person)
         for t in range(temporal):           # for each temporal
@@ -89,6 +89,15 @@ def evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
 
     return sum(pck_eval) / float(len(pck_eval))  #
 
+
+def cpm_evaluation(label_map, predict_heatmaps, sigma=0.04):
+    pck_eval = []
+    for b in range(label_map.shape[0]):        # for each batch (person)
+            target = np.asarray(label_map[b, t, :, :, :].data)
+            predict = np.asarray(predict_heatmaps[t][b, :, :, :].data)
+            pck_eval.append(PCK(predict, target, sigma=sigma))
+
+    return sum(pck_eval) / float(len(pck_eval))  #
 
 def PCK(predict, target, label_size=45, sigma=0.04):
     """

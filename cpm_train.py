@@ -8,7 +8,6 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 
-from torch.optim.lr_scheduler import StepLR
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torchvision import transforms
@@ -20,8 +19,7 @@ device_ids = [0, 1, 2, 3]
 temporal = 5
 train_data_dir = '/home/haoyum/UCIHand/train/train_data'
 train_label_dir = '/home/haoyum/UCIHand/train/train_label'
-test_data_dir = '/home/haoyum/UCIHand/test/test_data'
-test_label_dir = '/home/haoyum/UCIHand/test/test_label'
+
 
 # add parameter
 parser = argparse.ArgumentParser(description='Pytorch LSTM_PM with Penn_Action')
@@ -56,8 +54,6 @@ if args.cuda:
 def train():
     # initialize optimizer
     optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
-    optimizer = nn.DataParallel(optimizer, device_ids=device_ids)  # for multi- GPU
-
     criterion = nn.MSELoss(size_average=True)                       # loss function MSE average
     net.train()
     for epoch in range(args.begin_epoch, args.epochs + 1):
@@ -75,14 +71,18 @@ def train():
             predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
 
             # ******************** calculate and save loss of each joints ********************
+            total_loss = criterion()
+
+
             #total_loss = save_loss(predict_heatmaps, label_map, epoch, step, criterion, train=True, temporal=temporal)
+
             if step % 10 == 0:
                 print '--step .....' + str(step)
                 print '--loss ' + str(float(total_loss.data[0]))
 
             # ******************** save training heat maps per 100 steps ********************
             if step % 100 == 0:
-                save_images(label_map, predict_heatmaps, step, epoch, imgs, train=True, temporal=temporal)
+                save_images(label_map, predict_heatmaps, step, epoch, imgs, train=True, temporal=temporal, )
 
             # backward
             total_loss.backward()
