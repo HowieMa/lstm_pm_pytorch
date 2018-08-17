@@ -49,6 +49,7 @@ if args.cuda:
     net = net.cuda(device_ids[0])
     net = nn.DataParallel(net, device_ids=device_ids)  # multi-Gpu
 
+
 def train():
     # initialize optimizer
     optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))

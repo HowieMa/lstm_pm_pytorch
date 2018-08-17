@@ -1,7 +1,7 @@
 # https://github.com/HowieMa/lstm_pm_pytorch.git
 import argparse
 from model.cpm import CPM
-from data.handpose_data2 import UCIHandPoseDataset
+from data.handpose_data_cpm import UCIHandPoseDataset
 from src.utils import *
 
 import torch
@@ -38,7 +38,7 @@ if not os.path.exists(args.save_dir):
 transform = transforms.Compose([transforms.ToTensor()])
 
 # Build dataset
-train_data = UCIHandPoseDataset(data_dir=train_data_dir, label_dir=train_label_dir, temporal=temporal, train=True)
+train_data = UCIHandPoseDataset(data_dir=train_data_dir, label_dir=train_label_dir)
 print 'Train dataset total number of images sequence is ----' + str(len(train_data))
 
 # Data Loader
@@ -59,8 +59,8 @@ def train():
     for epoch in range(args.begin_epoch, args.epochs + 1):
 
         print 'epoch....................' + str(epoch)
-        for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
-            images = Variable(images.cuda(device_ids[0]) if args.cuda else images)               # 4D Tensor
+        for step, (image, label_map, center_map, imgs) in enumerate(train_dataset):
+            image = Variable(image.cuda(device_ids[0]) if args.cuda else image)               # 4D Tensor
             # Batch_size  *  3  *  width(368)  *  height(368)
             label_map = Variable(label_map.cuda(device_ids[0]) if args.cuda else label_map)      # 4D Tensor
             # Batch_size  *  (joints+1) *   45  *  45
@@ -68,11 +68,15 @@ def train():
             # Batch_size  *  1          * width(368) * height(368)
 
             optimizer.zero_grad()
-            predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
+            pred_6 = net(image, center_map)  # get a list size: temporal * 4D Tensor
+
 
             # ******************** calculate and save loss of each joints ********************
             total_loss = criterion()
 
+            loss = net.mse_loss(pred_6, label_map, weight, weighted_loss=args.weighted_loss)
+            loss.backward()
+            optimizer.step()
 
             #total_loss = save_loss(predict_heatmaps, label_map, epoch, step, criterion, train=True, temporal=temporal)
 
@@ -81,8 +85,8 @@ def train():
                 print '--loss ' + str(float(total_loss.data[0]))
 
             # ******************** save training heat maps per 100 steps ********************
-            if step % 100 == 0:
-                save_images(label_map, predict_heatmaps, step, epoch, imgs, train=True, temporal=temporal, )
+            #if step % 100 == 0:
+                #save_images(label_map, predict_heatmaps, step, epoch, imgs, train=True, temporal=temporal, )
 
             # backward
             total_loss.backward()

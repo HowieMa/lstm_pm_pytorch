@@ -21,7 +21,7 @@ class UCIHandPoseDataset(Dataset):
         self.joints = joints  # 21 heat maps
         self.sigma = sigma  # gaussian center heat map sigma
 
-        self.temporal_dir = []
+        self.images_dir = []
         self.gen_imgs_dir()
 
     def gen_imgs_dir(self):
@@ -35,23 +35,13 @@ class UCIHandPoseDataset(Dataset):
                 continue
             image_path = os.path.join(self.data_dir, seq)  #
             imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
-            imgs.sort()
+            for i in range(len(imgs)):
+                self.images_dir.append(image_path + '/' + imgs[i])  #
 
-            img_num = len(imgs)
-            if img_num < self.temporal:
-                continue  # ignore sequences whose length is less than temporal
-
-            for i in range(0, img_num):
-                tmp = []
-                for k in range(i, i + self.temporal):
-                    tmp.append(os.path.join(image_path, imgs[k]))
-                self.temporal_dir.append(tmp)  #
-
-        self.temporal_dir.sort()
-        print 'total numbers of image is ' + str(len(self.temporal_dir))
+        print 'total numbers of image is ' + str(len(self.images_dir))
 
     def __len__(self):
-        return len(self.temporal_dir)
+        return len(self.images_dir)
 
     def __getitem__(self, idx):
         """
@@ -63,7 +53,8 @@ class UCIHandPoseDataset(Dataset):
         """
 
         label_size = self.width / 8 - 1         # 45
-        img = self.temporal_dir[idx]           # # '.../001L0/L0005.jpg'
+        img = self.images_dir[idx]           # # '.../001L0/L0005.jpg'
+
         seq = img.split('/')[-2]            # 001L0
         label_path = os.path.join(self.label_dir, seq)
         labels = json.load(open(label_path + '.json'))
@@ -111,10 +102,10 @@ class UCIHandPoseDataset(Dataset):
         :param joints:              int             21
         :param ratio_x:             float           1.4375
         :param ratio_y:             float           1.4375
-        :return:  heatmap           numpy           (joints+1) * boxsize/stride * boxsize/stride
+        :return:  heatmap           numpy           joints * boxsize/stride * boxsize/stride
         """
         # initialize
-        label_maps = np.zeros((joints + 1, label_size, label_size ))
+        label_maps = np.zeros((joints, label_size, label_size))
         background = np.zeros((label_size, label_size))
 
         # each joint
@@ -122,12 +113,26 @@ class UCIHandPoseDataset(Dataset):
             lbl = label[i]                      # [x, y]
             x = lbl[0] * ratio_x / 8.0          # modify the label
             y = lbl[1] * ratio_y / 8.0
-            heatmap = self.genCenterMap(x, y, sigma=self.sigma, size_w=label_size, size_h=label_size)  # numpy
+            heatmap = self.genCenterMap(y, x, sigma=self.sigma, size_w=label_size, size_h=label_size)  # numpy
             background += heatmap               # numpy
-            label_maps[i, :, :] = heatmap
+            label_maps[i, :, :] = np.transpose(heatmap)  # !!!
 
-        # back ground
-        label_maps[joints, :, :] = 1 - background
         return label_maps  # numpy           label_size * label_size * (joints + 1)
 
 
+## test case
+# data = UCIHandPoseDataset(data_dir='/Users/mahaoyu/UCI/HandsPoseDataset/train/train_data',
+#                           label_dir='/Users/mahaoyu/UCI/HandsPoseDataset/train/train_label')
+#
+# img, label, center, name = data[1]
+#
+# print img.shape
+# print label.shape
+# print center.shape
+# print name
+#
+#
+# lab = np.asarray(label)
+# out = np.zeros(((45, 45)))
+# for i in range(21):
+#     out += lab[i,:, :]

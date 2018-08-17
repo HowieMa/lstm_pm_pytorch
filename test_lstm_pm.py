@@ -60,7 +60,7 @@ print '********* test data *********'
 sigma = 0.0
 results = []
 for i in range(10):
-    sigma += 0.1
+    sigma += 0.01
     result = []
     result.append(sigma)
     pck_all = []
