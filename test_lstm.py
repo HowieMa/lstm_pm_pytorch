@@ -31,11 +31,10 @@ import utils
 nb_temporal = 4
 batch_size=4
 ckpt_path = '/home/danningx/code/8-15/checkpoint'
-run = [20,25,30,35,40,45,50]
+run = [10,15,20,25,27,30,33,35,37,40,45,50,55,60]
 pck_sigma = 0.04
 avg_pck_savepath = '/home/danningx/code/8-15/pck.json'
 img_save_path = '/home/danningx/code/8-15/runtime_heatmaps/test/'
-
 
 # In[3]:
 
@@ -74,12 +73,11 @@ for ckpt_name in ckpt_list:
             pck_all.append(pck)
             img_name.append(imgs)
             
-            if step%50==0:
-                utils.save_image(img_save_path+'stp'+str(step)+'_b', nb_temporal, predict_heatmaps, label_map)
+            if step%100==0:
+                utils.save_image(img_save_path+'e'+ckpt_name.split('_')[-1]+'_stp'+str(step)+'_b', nb_temporal, predict_heatmaps, label_map)
                 print "pck: " + str(pck)
-                
         avg_pck = sum(pck_all)/float(len(pck_all))
-        print "checkpoint "+ckpt_name.split('_')[-1]+" : "+avg_pck
+        print "checkpoint "+ckpt_name.split('_')[-1]+" : "+str(avg_pck)
         pck_history[int(ckpt_name.split('_')[-1])] = {'avg':avg_pck,'pck_all':pck_all, 'img_name':img_name}
         json.dump(pck_history, open(avg_pck_savepath, 'wb')) 
         
