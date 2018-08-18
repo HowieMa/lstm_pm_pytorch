@@ -76,6 +76,7 @@ loss_history = utils.init_loss_history_cpm()
 for epoch in range(nb_epochs):
     print 'epoch......................' + str(epoch+1)
     net.train(True)
+    runtime_pck = []
     for idx, (images, label_map, center_map, _) in enumerate(train_dataset): 
         images = Variable(images.cuda())        
         label_map = Variable(label_map.cuda())
@@ -93,8 +94,8 @@ for epoch in range(nb_epochs):
         loss = sum(runtime_loss)#/batch_size
         loss.backward()
         optimizer.step()
-        pck = utils.cpm_evaluation(label_map, predict_heatmaps, sigma=0.04)
-        loss_history['train_pckall'].append(pck)
+        runtime_pck.append(utils.cpm_evaluation(label_map, predict_heatmaps, sigma=0.04))
+        
         
         # write loss hitory
         for s in range(nb_stage):
@@ -102,9 +103,10 @@ for epoch in range(nb_epochs):
         loss_history['all'].append(float(sum(runtime_loss)/float(batch_size)))
         
         if idx%20 ==0 :
-            print "Epoch: "+str(epoch+1)+" itr: "+str(idx+1)+" loss: "+str(float(loss)/batch_size)+ "  pck: "+str(pck)
+            print "Epoch: "+str(epoch+1)+" itr: "+str(idx+1)+" loss: "+str(float(loss)/batch_size)+ "  pck: "+str(sum(runtime_pck)/float(len(runtime_pck)))
             #break
             
+    loss_history['train_pckall'].append(sum(runtime_pck)/float(len(runtime_pck)))
     for param_group in optimizer.param_groups:
         #print param_group['lr']
         loss_history['lr'].append(param_group['lr'])
@@ -119,7 +121,7 @@ for epoch in range(nb_epochs):
     if epoch%5 ==4:
         net.eval()
         print 'Testing epoch '+ str(epoch+1) + '*****************************************'
-        pck_all = []
+        runtime_pck= []
         img_name = []
         for idx, (images, label_map, center_map, imgs) in enumerate(test_dataset):
             images = Variable(images.cuda())
@@ -128,17 +130,19 @@ for epoch in range(nb_epochs):
             center_map = center_map[:,0,:,:]
             
             predict_heatmaps = net(images, center_map) 
-            pck = utils.cpm_evaluation(label_map, predict_heatmaps, sigma=0.04)
-            pck_all.append(pck)
+            runtime_pck.append(utils.cpm_evaluation(label_map, predict_heatmaps, sigma=0.04))
             img_name.append(imgs)
             
             if idx%100==0:
                 utils.save_image_cpm(save_test_heatmap_path+'/e'+str(epoch+1)+'_stp'+str(idx)+'_b', predict_heatmaps, label_map)
                 #break
-        avg_pck = sum(pck_all)/float(len(pck_all))
+        avg_pck = sum(runtime_pck)/float(len(runtime_pck))
                 
         
         print "Test Epoch "+str(epoch+1)+"  pck : "+str(avg_pck)
-        loss_history['test_pck'][epoch+1] = {'avg':avg_pck,'pck_all':pck_all, 'img_name':img_name}
+        loss_history['test_pck'][epoch+1] = {'avg':avg_pck,'pck_all':runtime_pck, 'img_name':img_name}
+        
+        
+
         
         
