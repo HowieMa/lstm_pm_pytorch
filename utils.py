@@ -4,13 +4,28 @@ import os
 import scipy.misc
 
 
-def loss_history_init(temporal=5):
+def loss_history_init_lstm(temporal=5):
     loss_history = {}
     for t in range(temporal):
         loss_history['temporal'+str(t)] = []
     loss_history['total'] = 0.0
     return loss_history
 
+def init_loss_history_cpm(nb_stage=6):
+    loss_history = {}
+    for i in range(nb_stage):
+        loss_history['stage'+str(i+1)] = []
+    loss_history['all'] = []
+    loss_history['train_pckall'] = []
+    loss_history['test_pck'] = {}
+    loss_history['lr'] = []
+    return loss_history
+
+def init_runtime_loss_cpm(nb_stage = 6):
+    runtime_loss = []
+    for i in range(nb_stage):
+        runtime_loss.append(0)   #loss for each stage 
+    return runtime_loss
 
 def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, temporal=5, save_dir='ckpt/'):
     loss_save = loss_history_init(temporal=temporal)
@@ -39,6 +54,10 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
 
     return total_loss
 
+def mkdir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
 
 def save_image(save_path, nb_temporal, pred_heatmap, label_map, size=45, nb_heatmap=21):
     # predict_heatmaps shape: [nb_temporal, batch_size,22,45,45]
@@ -57,7 +76,21 @@ def save_image(save_path, nb_temporal, pred_heatmap, label_map, size=45, nb_heat
                     s[45:, j*45:(j+1)*45]+=pred_heatmap[j].cpu().data.numpy()[i,k,:,:]
         scipy.misc.imsave(save_path+str(i+1)+'.jpg', s)
         
-
+def save_image_cpm(save_path, pred_heatmap, label_map, size=45, nb_heatmap=21, nb_stage =6):
+    # predict_heatmaps shape: [nb_temporal, batch_size,22,45,45]
+    for i in range(pred_heatmap.shape[0]):# each batch (person)
+        if label_map is None:
+            s = np.zeros((size, size*nb_stage)) 
+        else:
+            s = np.zeros((size, size*(1+nb_stage))) 
+            
+        for j in range(nb_stage):  # each stage
+            for k in range(nb_heatmap):
+                s[:, j*45:(j+1)*45]+=pred_heatmap[i,j,k,:,:].cpu().data.numpy()
+                if label_map is not None:
+                    s[:, -45:]+=label_map[i , k, :, :]
+        scipy.misc.imsave(save_path+str(i+1)+'.jpg', s)
+        
 def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
     pck_eval = []
     for b in range(label_map.shape[0]):        # for each batch (person)
@@ -69,11 +102,12 @@ def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
     return sum(pck_eval) / float(len(pck_eval))  #
 
 
-def cpm_evaluation(label_map, predict_heatmaps, sigma=0.04):
+def cpm_evaluation(label_map, predict_heatmaps,nb_stage=6, sigma=0.04):
     pck_eval = []
     for b in range(label_map.shape[0]):        # for each batch (person)
-            target = np.asarray(label_map[b, t, :, :, :].data)
-            predict = np.asarray(predict_heatmaps[t][b, :, :, :].data)
+        for s in range(nb_stage):
+            target = np.asarray(label_map[b, :, :, :].data)
+            predict = np.asarray(predict_heatmaps[b,s, :, :, :].data)
             pck_eval.append(PCK(predict, target, sigma=sigma))
 
     return sum(pck_eval) / float(len(pck_eval))  #
