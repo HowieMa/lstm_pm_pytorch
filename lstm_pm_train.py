@@ -54,7 +54,6 @@ def train():
     # initialize optimizer
     optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
 
-    # optimizer = nn.DataParallel(optimizer, device_ids=device_ids)  # for multi- GPU useless
     criterion = nn.MSELoss(size_average=True)                       # loss function MSE average
 
     net.train()
