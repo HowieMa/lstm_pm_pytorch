@@ -41,8 +41,6 @@ def load_model(model):
     net = LSTM_PM(T=temporal)
     if torch.cuda.is_available():
         net = net.cuda()
-        net = net.cuda(device_ids[0])
-        net = nn.DataParallel(net, device_ids=device_ids)  # multi-Gpu
 
     save_path = os.path.join('ckpt/ucihand_lstm_pm'+str(model)+'.pth')
     state_dict = torch.load(save_path)
@@ -54,6 +52,7 @@ def load_model(model):
         new_state_dict[namekey] = v
     # load params
     net.load_state_dict(new_state_dict)
+    net = nn.DataParallel(net, device_ids=device_ids)  # multi-Gpu
     return net
 
 

@@ -8,6 +8,7 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 
+from torch.optim.lr_scheduler import StepLR
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torchvision import transforms
@@ -52,7 +53,10 @@ if args.cuda:
 
 def train():
     # initialize optimizer
-    optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
+    #optimizer = optim.Adam(params=net.parameters(), lr=args.learning_rate, betas=(0.5, 0.999))
+
+    optimizer = optim.SGD(params=net.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=5e-4)
+    scheduler = StepLR(optimizer, step_size=40000, gamma=0.333)
 
     criterion = nn.MSELoss(size_average=True)                       # loss function MSE average
 
@@ -85,8 +89,7 @@ def train():
             # backward
             total_loss.backward()
             optimizer.step()
-            # optimizer.module.step()  # for multi-GPU
-            #scheduler.step()
+            scheduler.step()
 
         #  ************************* save model per 10 epochs  *************************
         if epoch % 5 == 0:
