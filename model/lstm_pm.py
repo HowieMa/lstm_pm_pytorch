@@ -21,7 +21,7 @@ class LSTM_PM(nn.Module):
         self.conv4_convnet1 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
         self.conv5_convnet1 = nn.Conv2d(32, 512, kernel_size=9, padding=4)
         self.conv6_convnet1 = nn.Conv2d(512, 512, kernel_size=1)
-        self.conv7_convnet1 = nn.Conv2d(512, self.outclass , kernel_size=1)  # 512 * 45 * 45
+        self.conv7_convnet1 = nn.Conv2d(512, self.outclass, kernel_size=1)  # 512 * 45 * 45
 
         # conv_net2
         self.conv1_convnet2 = nn.Conv2d(3, 128, kernel_size=9, padding=4)  # 3 * 368 * 368
@@ -60,7 +60,7 @@ class LSTM_PM(nn.Module):
     def convnet1(self, image):
         '''
         :param image: 3 * 368 * 368
-        :return: initial_heatmap (class + 1) * 45 * 45
+        :return: initial_heatmap out_class * 45 * 45
         '''
         x = self.pool1_convnet1(F.relu(self.conv1_convnet1(image)))  # output 128 * 184 * 184
         x = self.pool2_convnet1(F.relu(self.conv2_convnet1(x)))  # output 128 * 92 * 92
@@ -85,7 +85,7 @@ class LSTM_PM(nn.Module):
     def convnet3(self, hide_t):
         """
         :param h_t: 48 * 45 * 45
-        :return: heatmap (class+1) * 45 * 45
+        :return: heatmap   out_class * 45 * 45
         """
         x = F.relu(self.Mconv1_convnet3(hide_t))  # output 128 * 45 * 45
         x = F.relu(self.Mconv2_convnet3(x))  # output 128 * 45 * 45
@@ -149,11 +149,11 @@ class LSTM_PM(nn.Module):
         '''
         :param image:               3 * 368 * 368
         :param cmap: gaussian       1 * 368 * 368
-        :param heatmap:             (class+1) * 45 * 45
+        :param heatmap:             out_class * 45 * 45
         :param cell_t_1:            48 * 45 * 45
         :param hide_t_1:            48 * 45 * 45
         :return:
-        new_heatmap:                (class+1) * 45 * 45
+        new_heatmap:                out_class * 45 * 45
         cell_t:                     48 * 45 * 45
         hide_t:                     48 * 45 * 45
         '''
@@ -168,7 +168,7 @@ class LSTM_PM(nn.Module):
         :param image:                3 * 368 * 368
         :param cmap:                 1 * 368 * 368
         :return:
-        heatmap:                     (class+1) * 45 * 45
+        heatmap:                     out_class * 45 * 45
         cell_t:                      48 * 45 * 45
         hide_t:                      48 * 45 * 45
         '''
@@ -187,7 +187,7 @@ class LSTM_PM(nn.Module):
         :param images:      Tensor      T * 3 * w(368) * h(368)
         :param center_map:  Tensor      1 * 368 * 368
         :return:
-        heatmaps            list        T * (class+1) * 45 * 45
+        heatmaps            list        T * out_class * 45 * 45
         '''  
         image = images[:, 0:3, :, :]
         
@@ -204,10 +204,11 @@ class LSTM_PM(nn.Module):
 
 
 # test case
-# net = LSTM_PM(T=4)
-# a = torch.randn(4, 3, 368, 368)
-# c = torch.randn(1, 368, 368)
-# maps = net(a, c)
-# for m in maps:
-#    print m.shape
+if __name__ == '__main__':
+    net = LSTM_PM(T=4)
+    a = torch.randn(4, 3, 368, 368)
+    c = torch.randn(1, 368, 368)
+    maps = net(a, c)
+    for m in maps:
+       print m.shape
 

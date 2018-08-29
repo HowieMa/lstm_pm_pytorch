@@ -40,10 +40,10 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
     return total_loss
 
 
-def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=5, save_dir = 'ckpt/'):
+def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=5, save_dir='ckpt/'):
     """
     :param label_map:
-    :param predict_heatmaps:    5D Tensor    Batch_size  *  Temporal * (joints+1) *   45 * 45
+    :param predict_heatmaps:    5D Tensor    Batch_size  *  Temporal * joints *   45 * 45
     :param step:
     :param temporal:
     :param epoch:
@@ -89,15 +89,6 @@ def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
 
     return sum(pck_eval) / float(len(pck_eval))  #
 
-
-def cpm_evaluation(label_map, predict_heatmaps, sigma=0.04):
-    pck_eval = []
-    for b in range(label_map.shape[0]):        # for each batch (person)
-            target = np.asarray(label_map[b, t, :, :, :].data)
-            predict = np.asarray(predict_heatmaps[t][b, :, :, :].data)
-            pck_eval.append(PCK(predict, target, sigma=sigma))
-
-    return sum(pck_eval) / float(len(pck_eval))  #
 
 def PCK(predict, target, label_size=45, sigma=0.04):
     """

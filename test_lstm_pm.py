@@ -1,17 +1,18 @@
 # test
-import torch
-from torch.utils.data import DataLoader
-
 from data.handpose_data2 import UCIHandPoseDataset
 from model.lstm_pm import LSTM_PM
 from src.utils import *
 
 import argparse
 import pandas as pd
-
+import os
+import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from collections import OrderedDict
+from torch.utils.data import DataLoader
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 
 # add parameter
 parser = argparse.ArgumentParser(description='Pytorch LSTM_PM with Penn_Action')
@@ -22,13 +23,11 @@ parser.add_argument('--cuda', default=1, type=int, help='if you use GPU, set cud
 parser.add_argument('--temporal', default=4, type=int, help='how many temporals you want ')
 args = parser.parse_args()
 
-
 # hyper parameter
 temporal = 5
 test_data_dir = '/mnt/data/haoyum/UCIHand/test/test_data'
 test_label_dir = '/mnt/data/haoyum/UCIHand/test/test_label'
-device_ids = [0, 1]
-
+model_epo = [10, 15, 20, 25, 30, 35, 40, 45, 50]
 
 # load data
 test_data = UCIHandPoseDataset(data_dir=test_data_dir, label_dir=test_label_dir, temporal=temporal, train=False)
@@ -41,8 +40,9 @@ def load_model(model):
     net = LSTM_PM(T=temporal)
     if torch.cuda.is_available():
         net = net.cuda()
+        net = nn.DataParallel(net)  # multi-Gpu
 
-    save_path = os.path.join('ckpt/ucihand_lstm_pm'+str(model)+'.pth')
+    save_path = os.path.join('ckpt/ucihand_lstm_pm' + str(model)+'.pth')
     state_dict = torch.load(save_path)
     # ******************** transfer from multi-GPU model ********************
     # create new OrderedDict that does not contain `module.`
@@ -52,32 +52,32 @@ def load_model(model):
         new_state_dict[namekey] = v
     # load params
     net.load_state_dict(new_state_dict)
-    net = nn.DataParallel(net, device_ids=device_ids)  # multi-Gpu
-    return net
 
+    return net
 
 # **************************************** test all images ****************************************
 
+
 print '********* test data *********'
-model_epo = [10, 15, 20, 25, 30, 35, 40, 45, 50]
+
 for model in model_epo:
 
     net = load_model(model)
     net.eval()
 
-    sigma = 0.04
+    sigma = 0.01
     results = []
-    for i in range(1):
+    for i in range(5):
 
-        result = []
+        result = []  # save sigma and pck
         result.append(sigma)
         pck_all = []
         for step, (images, label_map, center_map, imgs) in enumerate(test_dataset):
 
-            images = Variable(images.cuda() if args.cuda else images)  # 4D Tensor
+            images = Variable(images.cuda() if args.cuda else images)           # 4D Tensor
             # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
             label_map = Variable(label_map.cuda() if args.cuda else label_map)  # 5D Tensor
-            # Batch_size  *  Temporal        * (joints+1) *   45 * 45
+            # Batch_size  *  Temporal        * joint *   45 * 45
             center_map = Variable(center_map.cuda() if args.cuda else center_map)  # 4D Tensor
             # Batch_size  *  1          * width(368) * height(368)
 
@@ -93,7 +93,7 @@ for model in model_epo:
                 if pck < 0.8:
                     print imgs
             if pck < 0.8:
-                save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train=False, temporal=5)
+                save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train=False, temporal=temporal)
 
         print 'sigma ==========> ' + str(sigma)
         print '===PCK evaluation in test dataset is ' + str(sum(pck_all) / len(pck_all))

@@ -73,6 +73,7 @@ class UCIHandPoseDataset(Dataset):
         images          3D Tensor      (temporal * 3)   *   height(368)   *   weight(368)
         label_map       4D Tensor      temporal         *   joints        *   label_size(45)   *   label_size(45)
         center_map      3D Tensor      1                *   height(368)   *   weight(368)
+        imgs            list of image directory
         """
         label_size = self.width / 8 - 1         # 45
 
@@ -147,26 +148,22 @@ class UCIHandPoseDataset(Dataset):
             y = lbl[1] * ratio_y / 8.0
             heatmap = self.genCenterMap(y, x, sigma=self.sigma, size_w=label_size, size_h=label_size)  # numpy
             background += heatmap               # numpy
-            label_maps[i, :, :] = np.transpose(heatmap)  # !!!
+            label_maps[i, :, :] = np.transpose(heatmap)
 
-        # back ground
-        # label_maps[joints, :, :] = np.transpose(1 - background) !!!
-        #label_maps[joints, :, :] = np.zeros((label_size, label_size))
-
-        return label_maps  # numpy           label_size * label_size * (joints + 1)
+        return label_maps  # numpy           label_size * label_size * joints
 
 
+# test case
 
+if __name__ == '__main__':
+    temporal = 5
+    data_dir = '../dataset/frames/001'
+    label_dir = '../dataset/label/001'
 
-# # test case
-# temporal = 5
-# data_dir = '../dataset/frames/001'
-# label_dir = '../dataset/label/001'
-#
-# dataset = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir, temporal=temporal)
-#
-# a = dataset.temporal_dir
-# images, label_maps,center_map =  dataset[2]
-# print images.shape  # (5*3) * 368 * 368
-# print label_maps.shape  # 5 21 45 45
-#
+    dataset = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir, temporal=temporal)
+
+    a = dataset.temporal_dir
+    images, label_maps,center_map =  dataset[2]
+    print images.shape  # (5*3) * 368 * 368
+    print label_maps.shape  # 5 21 45 45
+
