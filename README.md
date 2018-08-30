@@ -12,7 +12,7 @@ Please note that this model is used for my own datasets. But the architecture an
 * scipy
 * sklearn
 * pillow
-* PyTorch 0.2
+* PyTorch 0.3
 * torchvision 0.1.9
 * pandas
 * numpy
