@@ -1,3 +1,7 @@
+"""
+Just try somehing new.....
+not finish yet ...
+"""
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
