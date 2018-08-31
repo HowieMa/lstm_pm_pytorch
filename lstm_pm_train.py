@@ -74,7 +74,7 @@ def train():
             # Batch_size  *  1          * width(368) * height(368)
 
             optimizer.zero_grad()
-            predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
+            predict_heatmaps = net(images, center_map)  # get a list size: (temporal + 1 ) * 4D Tensor
 
             # ******************** calculate and save loss of each joints ********************
             total_loss = save_loss(predict_heatmaps, label_map, epoch, step, criterion, train=True, temporal=temporal)

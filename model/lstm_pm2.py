@@ -7,6 +7,9 @@ import torch.nn.functional as F
 import torch
 
 
+
+
+
 class LSTM_PM(nn.Module):
 
     def __init__(self, outclass=21, T=7):
@@ -100,7 +103,7 @@ class LSTM_PM(nn.Module):
 
     def lstm(self, heatmap, features, centermap, hide_t_1, cell_t_1):
         '''
-        :param heatmap:     (class+1) * 45 * 45
+        :param heatmap:     class * 45 * 45
         :param features:    32 * 45 * 45
         :param centermap:   1 * 45 * 45
         :param hide_t_1:    48 * 45 * 45
@@ -183,7 +186,7 @@ class LSTM_PM(nn.Module):
         x = torch.cat([initial_heatmap, features, centermap], dim=1)
         cell1, hide1 = self.lstm0(x)
         heatmap = self.convnet3(hide1)
-        return heatmap, cell1, hide1
+        return initial_heatmap, heatmap, cell1, hide1
 
     def forward(self, images, center_map):
         '''
@@ -191,12 +194,13 @@ class LSTM_PM(nn.Module):
         :param images:      Tensor      T * 3 * w(368) * h(368)
         :param center_map:  Tensor      1 * 368 * 368
         :return:
-        heatmaps            list        T * out_class * 45 * 45
+        heatmaps            list        (T + 1 ) * out_class * 45 * 45
         '''
         image = images[:, 0:3, :, :]
 
         heat_maps = []
-        heatmap, cell, hide = self.stage1(image, center_map)  # initial heat map
+        initial_heatmap, heatmap, cell, hide = self.stage1(image, center_map)  # initial heat map
+        heat_maps.append(initial_heatmap)
         heat_maps.append(heatmap)
 
         #

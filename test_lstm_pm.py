@@ -44,16 +44,17 @@ def load_model(model):
 
     save_path = os.path.join('ckpt/ucihand_lstm_pm' + str(model)+'.pth')
     state_dict = torch.load(save_path)
+    net.load_state_dict(state_dict)
+    return net
+
     # ******************** transfer from multi-GPU model ********************
     # create new OrderedDict that does not contain `module.`
-    new_state_dict = OrderedDict()
-    for k, v in state_dict.items():
-        namekey = k[7:]  # remove `module.`
-        new_state_dict[namekey] = v
-    # load params
-    net.load_state_dict(new_state_dict)
-
-    return net
+    # new_state_dict = OrderedDict()
+    # for k, v in state_dict.items():
+    #     namekey = k[7:]  # remove `module.`
+    #     new_state_dict[namekey] = v
+    # # load params
+    # return net
 
 # **************************************** test all images ****************************************
 
@@ -90,10 +91,9 @@ for model in model_epo:
             if step % 100 == 0:
                 print '--step ...' + str(step)
                 print '--pck.....' + str(pck)
-                if pck < 0.8:
-                    print imgs
+
             if pck < 0.8:
-                save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train=False, temporal=temporal)
+                save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train=False, temporal=temporal,pck=pck)
 
         print 'sigma ==========> ' + str(sigma)
         print '===PCK evaluation in test dataset is ' + str(sum(pck_all) / len(pck_all))

@@ -179,7 +179,7 @@ class LSTM_PM(nn.Module):
         x = torch.cat([initial_heatmap, features, centermap], dim=1)
         cell1, hide1 = self.lstm0(x)
         heatmap = self.convnet3(hide1)
-        return heatmap, cell1, hide1
+        return initial_heatmap, heatmap, cell1, hide1
 
     def forward(self, images, center_map):  
         '''
@@ -192,9 +192,10 @@ class LSTM_PM(nn.Module):
         image = images[:, 0:3, :, :]
         
         heat_maps = []
-        heatmap, cell, hide = self.stage1(image, center_map)  # initial heat map
-        heat_maps.append(heatmap)
+        initial_heatmap, heatmap, cell, hide = self.stage1(image, center_map)  # initial heat map
 
+        heat_maps.append(initial_heatmap)  # for initial loss
+        heat_maps.append(heatmap)
         #
         for i in range(1, self.T):
             image = images[:, (3 * i):(3 * i + 3), :, :]

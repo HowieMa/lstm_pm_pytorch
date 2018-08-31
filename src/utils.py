@@ -14,12 +14,16 @@ def loss_history_init(temporal=5):
 
 def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, temporal=5, save_dir='ckpt/'):
     loss_save = loss_history_init(temporal=temporal)
-    total_loss = 0
+
+    predict = predict_heatmaps[0]
+    target = label_map[:, 0, :, :, :]
+    initial_loss = criterion(predict, target)  # loss initial
+    total_loss = initial_loss
 
     for t in range(temporal):
-        predict = predict_heatmaps[t]
+        predict = predict_heatmaps[t + 1]
         target = label_map[:, t, :, :, :]
-        tmp_loss = criterion(predict, target)
+        tmp_loss = criterion(predict, target)  # loss in each stage
         total_loss += tmp_loss
         loss_save['temporal' + str(t)] = float('%.8f' % tmp_loss)
 
@@ -40,7 +44,7 @@ def save_loss(predict_heatmaps, label_map, epoch, step, criterion, train, tempor
     return total_loss
 
 
-def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=5, save_dir='ckpt/'):
+def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, pck=1, temporal=5, save_dir='ckpt/'):
     """
     :param label_map:
     :param predict_heatmaps:    5D Tensor    Batch_size  *  Temporal * joints *   45 * 45
@@ -76,7 +80,8 @@ def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, temporal=
 
             if not os.path.exists(save_dir + 'test'):
                 os.mkdir(save_dir + 'test')
-            scipy.misc.imsave(save_dir + 'test' + '/s' + str(step) + '_b' + str(b) + '_' + seq + img + '.jpg', output)
+            scipy.misc.imsave(save_dir + 'test' + '/s' + str(step) + '_b' + str(b) + '_'
+                              + seq + img + '_' + str(round(pck, 4)) + '.jpg', output)
 
 
 def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
