@@ -7,9 +7,6 @@ import torch.nn.functional as F
 import torch
 
 
-
-
-
 class LSTM_PM(nn.Module):
 
     def __init__(self, outclass=21, T=7):

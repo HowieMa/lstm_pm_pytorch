@@ -9,7 +9,7 @@ from PIL import Image
 
 class UCIHandPoseDataset(Dataset):
 
-    def __init__(self, data_dir, label_dir, train, temporal=10, joints=21, transform=None, sigma=1):
+    def __init__(self, data_dir, label_dir, train, temporal=5, joints=21, transform=None, sigma=1):
         self.height = 368
         self.width = 368
 
@@ -17,7 +17,7 @@ class UCIHandPoseDataset(Dataset):
         self.data_dir = data_dir
         self.label_dir = label_dir
 
-        self.temporal = temporal
+        self.temporal = temporal * 6
         self.transform = transform
         self.joints = joints  # 21 heat maps
         self.sigma = sigma  # gaussian center heat map sigma
@@ -26,8 +26,6 @@ class UCIHandPoseDataset(Dataset):
 
         self.train = train
         if self.train is True:
-            self.gen_temporal_dir(1)
-        else:
             self.gen_temporal_dir(temporal)
 
     def gen_temporal_dir(self, step):
