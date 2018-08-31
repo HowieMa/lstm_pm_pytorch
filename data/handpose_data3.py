@@ -17,7 +17,7 @@ class UCIHandPoseDataset(Dataset):
         self.data_dir = data_dir
         self.label_dir = label_dir
 
-        self.temporal = temporal * 6
+        self.temporal = 6 * temporal - 5  # insert 5 images in each two labeled picture
         self.transform = transform
         self.joints = joints  # 21 heat maps
         self.sigma = sigma  # gaussian center heat map sigma
@@ -26,7 +26,7 @@ class UCIHandPoseDataset(Dataset):
 
         self.train = train
         if self.train is True:
-            self.gen_temporal_dir(temporal)
+            self.gen_temporal_dir(6)
 
     def gen_temporal_dir(self, step):
         """
@@ -44,11 +44,11 @@ class UCIHandPoseDataset(Dataset):
             imgs = os.listdir(image_path)  # [0005.jpg, 0011.jpg......]
             imgs.sort()
 
-            img_num = len(imgs)
+            img_num = len(imgs)  # 6 * old - 5
             if img_num < self.temporal:
                 continue  # ignore sequences whose length is less than temporal
 
-            for i in range(0, img_num - self.temporal + 1, step):
+            for i in range(0, img_num - self.temporal + 2, step):
                 tmp = []
                 for k in range(i, i + self.temporal):
                     tmp.append(os.path.join(image_path, imgs[k]))
@@ -60,8 +60,7 @@ class UCIHandPoseDataset(Dataset):
     def __len__(self):
         if self.train is True:
             length = len(self.temporal_dir)/self.temporal
-        else:
-            length = len(self.temporal_dir)
+
         return length
 
     def __getitem__(self, idx):
