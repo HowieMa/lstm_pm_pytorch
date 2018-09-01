@@ -19,7 +19,8 @@ device_ids = [0, 1, 2, 3]
 
 # hyper parameter
 temporal = 5
-train_data_dir = '/home/haoyum/UCIHand/train/train_full_data'
+train_data_dir = '/home/haoyum/UCIHand/train/train_data'
+train_full_data = '/home/haoyum/UCIHand/train/train_full_data'
 train_label_dir = '/home/haoyum/UCIHand/train/train_label'
 
 # add parameter
@@ -39,7 +40,7 @@ if not os.path.exists(args.save_dir):
 transform = transforms.Compose([transforms.ToTensor()])
 
 # Build dataset
-train_data = UCIHandPoseDataset(data_dir=train_data_dir, label_dir=train_label_dir, temporal=temporal, train=True)
+train_data = UCIHandPoseDataset(data_dir=train_data_dir,data_dir2=train_full_data, label_dir=train_label_dir, temporal=temporal, train=True)
 print 'Train dataset total number of images sequence is ----' + str(len(train_data))
 
 # Data Loader
