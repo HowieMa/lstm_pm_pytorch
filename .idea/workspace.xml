@@ -2,75 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/handpose_data3.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0455.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0461.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0467.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0473.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0479.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0485.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0491.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0497.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0503.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0509.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0515.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0521.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0527.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0533.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0539.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0545.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0551.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0557.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0563.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0569.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0575.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0581.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0587.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0599.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0605.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0611.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0617.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0623.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0629.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0635.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0641.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0647.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0653.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0659.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0665.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0671.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/L0/L0677.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0695.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0701.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0707.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0713.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0719.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0725.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0731.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0737.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0743.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0749.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0755.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0761.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0767.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0773.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0779.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0785.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0791.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0797.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0809.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0815.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0821.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0827.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0833.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0839.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0845.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0851.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0857.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/frames/001/R0/R0863.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/label/001/L0.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/label/001/R0.json" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -135,18 +67,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lstm_pm.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/lstm_pm.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2160">
-              <caret line="146" selection-start-line="146" selection-end-line="146" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="test_lstm_pm.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_lstm_pm.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -159,8 +79,8 @@
       <file leaf-file-name="handpose_data3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/data/handpose_data3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="959">
-              <caret line="258" column="8" selection-start-line="258" selection-start-column="8" selection-end-line="258" selection-end-column="8" />
+            <state relative-caret-position="200">
+              <caret line="235" column="52" selection-start-line="235" selection-start-column="52" selection-end-line="235" selection-end-column="52" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
                 <element signature="e#4716#5133#0" />
@@ -168,6 +88,16 @@
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="img.jpg" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/img.jpg">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file leaf-file-name="label.jpg" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/label.jpg">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file leaf-file-name="handpose_data2.py" pinned="false" current-in-tab="false">
@@ -461,23 +391,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/data/handpose_data_cpm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1725">
-          <caret line="121" selection-start-line="121" selection-end-line="121" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/lstm_pm2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2100">
-          <caret line="140" lean-forward="true" selection-start-line="140" selection-end-line="140" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lstm_pm_train.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1260">
@@ -830,9 +743,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/label.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/handpose_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-905">
@@ -853,10 +763,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$USER_HOME$/anaconda2/lib/python2.7/site-packages/torchvision-0.2.1-py2.7.egg!/torchvision/transforms/transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-78">
+          <caret line="97" column="8" selection-start-line="97" selection-start-column="8" selection-end-line="97" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/img.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/label.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/data/handpose_data3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="959">
-          <caret line="258" column="8" selection-start-line="258" selection-start-column="8" selection-end-line="258" selection-end-column="8" />
+        <state relative-caret-position="200">
+          <caret line="235" column="52" selection-start-line="235" selection-start-column="52" selection-end-line="235" selection-end-column="52" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
             <element signature="e#4716#5133#0" />

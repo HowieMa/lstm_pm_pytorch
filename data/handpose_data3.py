@@ -1,3 +1,6 @@
+"""
+train model without label
+"""
 import os
 import torchvision.transforms as transforms
 import torch
@@ -122,7 +125,7 @@ class UCIHandPoseDataset(Dataset):
             label = labels[img_num]  # 0005  list       21 * 2
             lbl = self.genLabelMap(label, label_size=label_size, joints=self.joints, ratio_x=ratio_x, ratio_y=ratio_y)
             label_maps[img_count, :, :, :] = torch.from_numpy(lbl)
-            print img_count
+
         img_count += 1
         # get all img
         for i in range(1, self.temporal):          # get temporal images
@@ -130,7 +133,6 @@ class UCIHandPoseDataset(Dataset):
 
             # *****************   get image without label   *****************
             img_name = img[-8:-4]               # 0005 name of image with label
-            print '------'
             sample_wait_list = []
             samples = []
             for frame in all_frames:
@@ -138,11 +140,9 @@ class UCIHandPoseDataset(Dataset):
                     sample_wait_list.append(frame)
             sample_wait_list.sort()
             step = int(math.ceil((len(sample_wait_list)+2) / float(self.sample+ 2)))  #
-            print step
-            print '.....'
+
             for s in range(step - 1, len(sample_wait_list), step):
                 samples.append(sample_wait_list[s])
-            print samples
 
             for sap in samples:
                 img_path = os.path.join(all_frame_path, sap)
@@ -153,7 +153,6 @@ class UCIHandPoseDataset(Dataset):
             pre_img = img_name
 
             #  *******************   get image with label   *******************
-
             im = Image.open(img)  # read image
             w, h, c = np.asarray(im).shape  # weight 256 * height 256 * 3
             ratio_x = self.width / float(w)
@@ -171,12 +170,9 @@ class UCIHandPoseDataset(Dataset):
                 lbl = self.genLabelMap(label, label_size=label_size, joints=self.joints, ratio_x=ratio_x,
                                        ratio_y=ratio_y)
                 label_maps[img_count, :, :, :] = torch.from_numpy(lbl)
-                print img_count
-
             img_count += 1
 
-
-        # generate the Gaussian heat map
+        # ***************** generate the Gaussian heat map  *****************
         center_map = self.genCenterMap(x=self.width / 2.0, y=self.height / 2.0, sigma=21,
                                        size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
@@ -237,13 +233,14 @@ if __name__ == '__main__':
     dataset = UCIHandPoseDataset(data_dir=data_dir, data_dir2=data_dir2, sample=2, label_dir=label_dir, temporal=temporal)
 
     a = dataset.temporal_dir
-    images, label_maps, center_map, imgs = dataset[2]
+    images, label_maps, center_map, imgs = dataset[3]
     print images.shape  # (5*3) * 368 * 368
     print label_maps.shape  # 5 21 45 45
     print imgs
     np.asarray(images)
     label_maps = np.asarray(label_maps)
 
+    # ***************** draw label map *****************
     out_labels = np.ones((45, 50 * label_maps.shape[0]))
     for i in range(label_maps.shape[0]):
         out = np.zeros((45,45))
@@ -253,10 +250,17 @@ if __name__ == '__main__':
         out_labels[:, i * 50:i * 50 + 45] = out
         scipy.misc.imsave('label.jpg', out_labels)
 
-    out_images = np.zeros((45,50 * label_maps.shape[0]))
+    # ***************** draw image *****************
+    im_size = 368
+    target = Image.new('RGB', (label_maps.shape[0]*im_size, im_size))
+    left = 0
+    right = im_size
     for i in range(label_maps.shape[0]):
-        im = images[i:i + 3, :, :]
-        
-        im = np.asarray(im)
-        print im.shape
+        im = images[i*3:i*3 + 3, :, :]
+        im = transforms.ToPILImage()(im)
+        target.paste(im, (left, 0, right, im_size))
+        left += im_size
+        right += im_size
+    target.save('img.jpg')
+
 
