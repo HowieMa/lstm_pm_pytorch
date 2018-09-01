@@ -64,7 +64,7 @@ class UCIHandPoseDataset(Dataset):
             if img_num < self.temporal:
                 continue  # ignore sequences whose length is less than temporal
 
-            for i in range(0, img_num - self.temporal + 2, step):
+            for i in range(0, img_num - self.temporal + 1, step):
                 tmp = []
                 for k in range(i, i + self.temporal):
                     tmp.append(os.path.join(image_path, imgs[k]))
