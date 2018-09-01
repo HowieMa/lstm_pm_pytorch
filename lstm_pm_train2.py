@@ -86,7 +86,7 @@ def train():
                 predict = predict_heatmaps[t + 1]
                 target = label_map[:, t, :, :, :]
 
-                if torch.equal(target, empty): # if no label, do nothing
+                if not torch.equal(target, empty): # if no label, do nothing
                     tmp_loss = criterion(predict, target)  # loss in each stage
                     total_loss += tmp_loss
 
