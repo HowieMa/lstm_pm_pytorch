@@ -84,11 +84,11 @@ def save_image_cpm(save_path, pred_heatmap, label_map, size=45, nb_heatmap=21, n
         else:
             s = np.zeros((size, size*(1+nb_stage))) 
             
-        for j in range(nb_stage):  # each stage
-            for k in range(nb_heatmap):
+        for k in range(nb_heatmap):
+            for j in range(nb_stage):  # each stage
                 s[:, j*45:(j+1)*45]+=pred_heatmap[i,j,k,:,:].cpu().data.numpy()
-                if label_map is not None:
-                    s[:, -45:]+=label_map[i , k, :, :]
+            if label_map is not None:
+                s[:, -45:]+=label_map[i , k, :, :]
         scipy.misc.imsave(save_path+str(i+1)+'.jpg', s)
         
 def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
@@ -102,14 +102,19 @@ def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
     return sum(pck_eval) / float(len(pck_eval))  #
 
 
-def cpm_evaluation(label_map, predict_heatmaps,nb_stage=6, sigma=0.04):
+def cpm_evaluation(label_map, predict_heatmaps,nb_stage=6, sigma=0.04, avg=False):
     pck_eval = []
     for b in range(label_map.shape[0]):        # for each batch (person)
-        for s in range(nb_stage):
-            target = np.asarray(label_map[b, :, :, :].data)
-            predict = np.asarray(predict_heatmaps[b,s, :, :, :].data)
+        target = np.asarray(label_map[b, :, :, :].data)
+        if avg:  #average PCK among each stage
+            for s in range(nb_stage):
+                predict = np.asarray(predict_heatmaps[b,s, :, :, :].data)
+                pck_eval.append(PCK(predict, target, sigma=sigma))
+        else:
+            predict = np.asarray(predict_heatmaps[b,-1, :, :, :].data)
             pck_eval.append(PCK(predict, target, sigma=sigma))
-
+            
+            
     return sum(pck_eval) / float(len(pck_eval))  #
 
 def PCK(predict, target, label_size=45, sigma=0.04):
