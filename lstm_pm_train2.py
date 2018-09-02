@@ -32,7 +32,7 @@ parser.add_argument('--learning_rate', type=float, default=8e-6, help='learning 
 parser.add_argument('--batch_size', default=4, type=int, help='batch size for training')
 parser.add_argument('--epochs', default=50, type=int, help='number of epochs for training')
 parser.add_argument('--begin_epoch', default=0, type=int, help='how many epochs the model has been trained')
-parser.add_argument('--save_dir', default='ckpt', type=str, help='directory of checkpoint')
+parser.add_argument('--save_dir', default='ckpt2', type=str, help='directory of checkpoint')
 parser.add_argument('--cuda', default=1, type=int, help='if you use GPU, set cuda = 1,else set cuda = 0')
 parser.add_argument('--temporal', default=4, type=int, help='how many temporals you want ')
 args = parser.parse_args()
@@ -101,7 +101,7 @@ def train():
 
             # ******************** save training heat maps per 100 steps ********************
             if step % 100 == 0:
-                save_images(label_map, predict_heatmaps, step, epoch, imgs, train=True, temporal=temporal)
+                save_images(label_map, predict_heatmaps, step, epoch, imgs, train=True, temporal=model_temporal)
 
             # backward
             total_loss.backward()

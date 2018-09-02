@@ -42,7 +42,7 @@ class UCIHandPoseDataset(Dataset):
 
         self.train = train
         if self.train is True:
-            self.gen_temporal_dir(self.temporal)
+            self.gen_temporal_dir(1)
 
     def gen_temporal_dir(self, step):
         """
