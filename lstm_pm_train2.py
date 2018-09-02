@@ -86,6 +86,7 @@ def train():
             total_loss = initial_loss
 
             empty = torch.zeros(21, 45, 45)
+            empty = Variable(empty.cuda())
 
             for t in range(temporal):
                 predict = predict_heatmaps[t + 1]
