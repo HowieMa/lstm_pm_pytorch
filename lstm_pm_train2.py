@@ -19,6 +19,9 @@ device_ids = [0, 1, 2, 3]
 
 # hyper parameter
 temporal = 5
+sample = 2
+model_temporal = temporal * (sample + 1) - sample
+
 train_data_dir = '/home/haoyum/UCIHand/train/train_data'
 train_full_data = '/home/haoyum/UCIHand/train/train_full_data'
 train_label_dir = '/home/haoyum/UCIHand/train/train_label'
@@ -48,7 +51,7 @@ print 'Train dataset total number of images sequence is ----' + str(len(train_da
 train_dataset = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
 
 # Build model
-net = LSTM_PM(T=temporal)
+net = LSTM_PM(T=model_temporal)
 if args.cuda:
     net = net.cuda(device_ids[0])
     net = nn.DataParallel(net, device_ids=device_ids)  # multi-Gpu
@@ -82,7 +85,7 @@ def train():
             initial_loss = criterion(predict, target)  # loss initial
             total_loss = initial_loss
 
-            empty = torch.zero(21, 45, 45)
+            empty = torch.zeros(21, 45, 45)
 
             for t in range(temporal):
                 predict = predict_heatmaps[t + 1]

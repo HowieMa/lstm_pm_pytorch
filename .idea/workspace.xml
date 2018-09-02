@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/data/handpose_data3.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lstm_pm_train2.py" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_pm_train2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,11 +23,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lstm_pm_train2.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lstm_pm_train2.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lstm_pm_train2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+            <state relative-caret-position="159">
+              <caret line="53" column="30" selection-start-line="53" selection-start-column="16" selection-end-line="53" selection-end-column="30" />
               <folding>
                 <element signature="e#49#64#0" expanded="true" />
               </folding>
@@ -77,11 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="handpose_data3.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="handpose_data3.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/handpose_data3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="66" column="57" selection-start-line="66" selection-start-column="57" selection-end-line="66" selection-end-column="57" />
+            <state relative-caret-position="297">
+              <caret line="89" column="24" selection-start-line="89" selection-start-column="24" selection-end-line="89" selection-end-column="72" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
                 <element signature="e#4716#5133#0" />
@@ -89,6 +89,16 @@
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="img.jpg" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/img.jpg">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file leaf-file-name="label.jpg" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/label.jpg">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file leaf-file-name="handpose_data2.py" pinned="false" current-in-tab="false">
@@ -131,6 +141,9 @@
       <find>pool_center_lower</find>
       <find>temporal</find>
       <find>data_dir</find>
+      <find>torch.zero</find>
+      <find>rea</find>
+      <find>real</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -156,8 +169,8 @@
         <option value="$PROJECT_DIR$/test_lstm_pm.py" />
         <option value="$PROJECT_DIR$/model/lstm_pm2.py" />
         <option value="$PROJECT_DIR$/data/handpose_data2.py" />
-        <option value="$PROJECT_DIR$/lstm_pm_train2.py" />
         <option value="$PROJECT_DIR$/data/handpose_data3.py" />
+        <option value="$PROJECT_DIR$/lstm_pm_train2.py" />
       </list>
     </option>
   </component>
@@ -183,12 +196,7 @@
             <path>
               <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
               <item name="lstm_pm_pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lstm_pm_pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="lstm_pm_pytorch" type="b2602c69:ProjectViewProjectNode" />
@@ -700,13 +708,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_lstm_pm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="58">
@@ -757,24 +758,31 @@
     <entry file="file://$PROJECT_DIR$/data/img.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/lstm_pm_train2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
-          <folding>
-            <element signature="e#49#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/handpose_data3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="66" column="57" selection-start-line="66" selection-start-column="57" selection-end-line="66" selection-end-column="57" />
+        <state relative-caret-position="297">
+          <caret line="89" column="24" selection-start-line="89" selection-start-column="24" selection-end-line="89" selection-end-column="72" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
             <element signature="e#4716#5133#0" />
             <element signature="e#5215#6306#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_lstm_pm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lstm_pm_train2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="53" column="30" selection-start-line="53" selection-start-column="16" selection-end-line="53" selection-end-column="30" />
+          <folding>
+            <element signature="e#49#64#0" expanded="true" />
           </folding>
         </state>
       </provider>
