@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/data/handpose_data3.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/handpose_data3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lstm_pm_train2.py" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_pm_train2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -85,8 +84,8 @@
       <file leaf-file-name="handpose_data3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/data/handpose_data3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="144" column="83" selection-start-line="144" selection-start-column="83" selection-end-line="144" selection-end-column="83" />
+            <state relative-caret-position="205">
+              <caret line="143" lean-forward="true" selection-start-line="143" selection-end-line="143" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
                 <element signature="e#4716#5133#0" />
@@ -794,8 +793,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data/handpose_data3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="144" column="83" selection-start-line="144" selection-start-column="83" selection-end-line="144" selection-end-column="83" />
+        <state relative-caret-position="205">
+          <caret line="143" lean-forward="true" selection-start-line="143" selection-end-line="143" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
             <element signature="e#4716#5133#0" />

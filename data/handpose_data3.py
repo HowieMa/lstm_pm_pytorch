@@ -141,7 +141,7 @@ class UCIHandPoseDataset(Dataset):
                 if pre_img < frame[-8:-4] < img_name:
                     sample_wait_list.append(frame)
             sample_wait_list.sort()
-            #step = int(math.ceil((len(sample_wait_list)+2) / float(self.sample+ 2)))  #
+
             step = int(math.ceil(len(sample_wait_list) / float(self.sample + 1) ))
 
             for s in range(step - 1, len(sample_wait_list), step):
