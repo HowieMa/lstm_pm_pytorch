@@ -85,7 +85,7 @@ def train():
             initial_loss = criterion(predict, target)  # loss initial
             total_loss = initial_loss
 
-            empty = torch.zeros(21, 45, 45)
+            empty = torch.zeros(args.batch_size, 21, 45, 45)
             empty = Variable(empty.cuda())
 
             for t in range(temporal):
