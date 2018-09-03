@@ -90,7 +90,7 @@ class UCIHandPoseDataset(Dataset):
         real_temporal = self.temporal * (self.sample + 1) - self.sample  # truly number of images
         imgs = self.temporal_dir[idx]           # ['.../001L0/L0005.jpg', '.../001L0/L0011.jpg', ... ]
         imgs.sort()
-
+        all_imgs =[]
         # get label in json form
         seq = imgs[0].split('/')[-2]            # 001L0
         label_path = os.path.join(self.label_dir, seq)
@@ -127,6 +127,8 @@ class UCIHandPoseDataset(Dataset):
             label_maps[img_count, :, :, :] = torch.from_numpy(lbl)
 
         img_count += 1
+        all_imgs.append(img)
+
         # get all img
         for i in range(1, self.temporal):          # get temporal images
             img = imgs[i]                       # '.../001L0/L0005.jpg'
@@ -150,6 +152,7 @@ class UCIHandPoseDataset(Dataset):
                 im = im.resize((self.width, self.height))  # unit8      weight 368 * height 368 * 3
                 images[(img_count * 3):(img_count * 3 + 3), :, :] = transforms.ToTensor()(im)
                 img_count += 1
+                all_imgs.append(img_path)
             pre_img = img_name
 
             #  *******************   get image with label   *******************
@@ -171,6 +174,7 @@ class UCIHandPoseDataset(Dataset):
                                        ratio_y=ratio_y)
                 label_maps[img_count, :, :, :] = torch.from_numpy(lbl)
             img_count += 1
+            all_imgs.append(img)
 
         # ***************** generate the Gaussian heat map  *****************
         center_map = self.genCenterMap(x=self.width / 2.0, y=self.height / 2.0, sigma=21,
@@ -178,7 +182,7 @@ class UCIHandPoseDataset(Dataset):
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
 
-        return images.float(), label_maps.float(), center_map.float(), imgs
+        return images.float(), label_maps.float(), center_map.float(), all_imgs
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
         """
