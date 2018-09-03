@@ -66,7 +66,7 @@ def train():
     for epoch in range(args.begin_epoch, args.epochs + 1):
 
         print 'epoch....................................' + str(epoch)
-        for step, (images, label_map, center_map, imgs) in enumerate(train_dataset):
+        for step, (images, label_map, center_map, empty, imgs) in enumerate(train_dataset):
 
             images = Variable(images.cuda() if args.cuda else images)               # 4D Tensor
             # Batch_size  *  (temporal * 3)  *  width(368)  *  height(368)
@@ -74,6 +74,7 @@ def train():
             # Batch_size  *  Temporal        * (joints+1) *   45 * 45
             center_map = Variable(center_map.cuda() if args.cuda else center_map)   # 4D Tensor
             # Batch_size  *  1          * width(368) * height(368)
+            empty = Variable(empty.cuda() if args.cuda else empty)
 
             optimizer.zero_grad()
             predict_heatmaps = net(images, center_map)  # get a list size: (temporal + 1 ) * 4D Tensor
@@ -85,10 +86,7 @@ def train():
             initial_loss = criterion(predict, target)  # loss initial
             total_loss = initial_loss
 
-            empty = torch.zeros(args.batch_size, 21, 45, 45)
-            empty = Variable(empty.cuda())
-
-            for t in range(temporal):
+            for t in range(model_temporal):
                 predict = predict_heatmaps[t + 1]
                 target = label_map[:, t, :, :, :]
 

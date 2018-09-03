@@ -182,8 +182,8 @@ class UCIHandPoseDataset(Dataset):
                                        size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
         center_map = center_map.unsqueeze_(0)
-
-        return images.float(), label_maps.float(), center_map.float(), all_imgs
+        empty = torch.zeros(self.joints,label_size, label_size )
+        return images.float(), label_maps.float(), center_map.float(), empty.float(), all_imgs
 
     def genCenterMap(self, x, y, sigma, size_w, size_h):
         """
@@ -230,7 +230,7 @@ class UCIHandPoseDataset(Dataset):
 
 if __name__ == '__main__':
     import scipy.misc
-    temporal = 4
+    temporal = 5
     data_dir = '../dataset/train_data'
     data_dir2 = '../dataset/train_full_data'
     label_dir = '../dataset/train_label'
@@ -238,19 +238,23 @@ if __name__ == '__main__':
     dataset = UCIHandPoseDataset(data_dir=data_dir, data_dir2=data_dir2, sample=2, label_dir=label_dir, temporal=temporal)
 
     a = dataset.temporal_dir
-    images, label_maps, center_map, imgs = dataset[3]
+    images, label_maps, center_map, empty, imgs = dataset[3]
     print images.shape  # (5*3) * 368 * 368
     print label_maps.shape  # 5 21 45 45
     print imgs
     np.asarray(images)
-    label_maps = np.asarray(label_maps)
 
     # ***************** draw label map *****************
     out_labels = np.ones((45, 50 * label_maps.shape[0]))
+
     for i in range(label_maps.shape[0]):
+        if not torch.equal(empty, label_maps[i, :, :, :]):
+            print 'lbl'
+
         out = np.zeros((45,45))
         for o in range(21):
-            out += label_maps[i, o, :, :]
+            out += np.asarray(label_maps[i, o, :, :])
+
 
         out_labels[:, i * 50:i * 50 + 45] = out
         scipy.misc.imsave('label.jpg', out_labels)
