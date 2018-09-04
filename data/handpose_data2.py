@@ -9,7 +9,7 @@ from PIL import Image
 
 class UCIHandPoseDataset(Dataset):
 
-    def __init__(self, data_dir, label_dir, train, temporal=10, joints=21, transform=None, sigma=1):
+    def __init__(self, data_dir, label_dir, train, temporal=5, joints=21, transform=None, sigma=1):
         self.height = 368
         self.width = 368
 
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     data_dir = '../dataset/frames/001'
     label_dir = '../dataset/label/001'
 
-    dataset = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir, temporal=temporal)
+    dataset = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir, temporal=temporal,train=True)
 
     a = dataset.temporal_dir
     images, label_maps,center_map =  dataset[2]

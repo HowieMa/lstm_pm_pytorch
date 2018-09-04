@@ -184,10 +184,10 @@ class LSTM_PM(nn.Module):
     def forward(self, images, center_map):  
         '''
 
-        :param images:      Tensor      T * 3 * w(368) * h(368)
+        :param images:      Tensor      (T * 3) * w(368) * h(368)
         :param center_map:  Tensor      1 * 368 * 368
         :return:
-        heatmaps            list        T * out_class * 45 * 45
+        heatmaps            list        (T + 1)* out_class * 45 * 45  includes the initial heatmap
         '''  
         image = images[:, 0:3, :, :]
         
@@ -207,8 +207,8 @@ class LSTM_PM(nn.Module):
 # test case
 if __name__ == '__main__':
     net = LSTM_PM(T=4)
-    a = torch.randn(4, 3, 368, 368)
-    c = torch.randn(1, 368, 368)
+    a = torch.randn(2, 12, 368, 368)  # batch size = 2
+    c = torch.randn(2, 1, 368, 368)
     maps = net(a, c)
     for m in maps:
        print m.shape

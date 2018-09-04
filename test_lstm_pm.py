@@ -83,7 +83,7 @@ for model in model_epo:
             # Batch_size  *  1          * width(368) * height(368)
 
             predict_heatmaps = net(images, center_map)  # get a list size: temporal * 4D Tensor
-
+            predict_heatmaps =  predict_heatmaps[1:]
             # calculate pck
             pck = lstm_pm_evaluation(label_map, predict_heatmaps, sigma=sigma, temporal=temporal)
             pck_all.append(pck)
