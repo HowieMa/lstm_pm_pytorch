@@ -91,7 +91,7 @@ def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
         for t in range(temporal):           # for each temporal
             target = np.asarray(label_map[b, t, :, :, :].data)          # 3D numpy 21 * 45 * 45
             predict = np.asarray(predict_heatmaps[t][b, :, :, :].data)  # 3D numpy 21 * 45 * 45
-            if not np.equal(empty, target):
+            if not np.equal(empty, target).all():
                 pck_eval.append(PCK(predict, target, sigma=sigma))
 
     return sum(pck_eval) / float(len(pck_eval))  #
