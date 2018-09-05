@@ -86,11 +86,13 @@ def save_images(label_map, predict_heatmaps, step, epoch, imgs, train, pck=1, te
 
 def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
     pck_eval = []
+    empty = np.zeros((21, 45, 45))                                      # 3D numpy 21 * 45 * 45
     for b in range(label_map.shape[0]):        # for each batch (person)
         for t in range(temporal):           # for each temporal
-            target = np.asarray(label_map[b, t, :, :, :].data)
-            predict = np.asarray(predict_heatmaps[t][b, :, :, :].data)
-            pck_eval.append(PCK(predict, target, sigma=sigma))
+            target = np.asarray(label_map[b, t, :, :, :].data)          # 3D numpy 21 * 45 * 45
+            predict = np.asarray(predict_heatmaps[t][b, :, :, :].data)  # 3D numpy 21 * 45 * 45
+            if not np.equal(empty, target):
+                pck_eval.append(PCK(predict, target, sigma=sigma))
 
     return sum(pck_eval) / float(len(pck_eval))  #
 
@@ -98,9 +100,9 @@ def lstm_pm_evaluation(label_map, predict_heatmaps, sigma=0.04, temporal=5):
 def PCK(predict, target, label_size=45, sigma=0.04):
     """
     calculate possibility of correct key point of one single image
-    if distance of ground truth and predict point is less than sigma, than
-    :param predict:         3D numpy       22 * 45 * 45
-    :param target:          3D numpy       22 * 45 * 45
+    if distance of ground truth and predict point is less than sigma, than  the value is 1, otherwise it is 0
+    :param predict:         3D numpy       21 * 45 * 45
+    :param target:          3D numpy       21 * 45 * 45
     :param label_size:
     :param sigma:
     :return: 0/21, 1/21, ...

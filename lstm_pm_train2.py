@@ -43,7 +43,8 @@ if not os.path.exists(args.save_dir):
 transform = transforms.Compose([transforms.ToTensor()])
 
 # Build dataset
-train_data = UCIHandPoseDataset(data_dir=train_data_dir,data_dir2=train_full_data, label_dir=train_label_dir, temporal=temporal, train=True)
+train_data = UCIHandPoseDataset(data_dir=train_data_dir, data_dir2=train_full_data,
+                                label_dir=train_label_dir, temporal=temporal, train=True)
 
 print 'Train dataset total number of images sequence is ----' + str(len(train_data))
 
