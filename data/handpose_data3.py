@@ -43,6 +43,8 @@ class UCIHandPoseDataset(Dataset):
         self.train = train
         if self.train is True:
             self.gen_temporal_dir(1)
+        else:
+            self.gen_temporal_dir(temporal)
 
     def gen_temporal_dir(self, step):
         """
@@ -74,7 +76,10 @@ class UCIHandPoseDataset(Dataset):
         print 'total numbers of image sequence is ' + str(len(self.temporal_dir))
 
     def __len__(self):
-        length = len(self.temporal_dir)/self.temporal
+        if self.train is True:
+            length = len(self.temporal_dir)/self.temporal
+        else:
+            length = len(self.temporal_dir)
         return length
 
     def __getitem__(self, idx):
