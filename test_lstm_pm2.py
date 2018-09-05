@@ -96,9 +96,12 @@ for model in model_epo:
             if step % 100 == 0:
                 print '--step ...' + str(step)
                 print '--pck.....' + str(pck)
+                save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train=False,
+                            temporal=temporal, pck=pck)
 
             if pck < 0.8:
-                save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train=False, temporal=temporal,pck=pck)
+                save_images(label_map, predict_heatmaps, step, epoch=-1, imgs=imgs, train=False,
+                            temporal=temporal, pck=pck)
 
         print 'sigma ==========> ' + str(sigma)
         print '===PCK evaluation in test dataset is ' + str(sum(pck_all) / len(pck_all))
