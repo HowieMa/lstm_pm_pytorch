@@ -201,7 +201,7 @@ def Tests_save_label_imgs(label_map, predict_heatmaps, step, imgs, temporal=13, 
         if not os.path.exists(save_dir_label):
             os.mkdir(save_dir_label)
 
-        json.dump(label_dict, open(save_dir_label + '/' + str(step), 'w'))
+        json.dump(label_dict, open(save_dir_label + '/' + str(step) + '.json', 'w'))
         return pck_dict
 
 
