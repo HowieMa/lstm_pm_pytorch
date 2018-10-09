@@ -128,8 +128,80 @@ def draw_loss(epoch):
         losses.append(a)
 
 
+def Tests_save_label_imgs(label_map, predict_heatmaps, step, imgs, temporal=13, save_dir='ckpt/'):
+    """
+    :param label_map:
+    :param predict_heatmaps:    5D Tensor    Batch_size  *  Temporal * joints *   45 * 45
+    :param step:
+    :param temporal:
+    :param epoch:
+    :param train:
+    :param imgs: list [(), (), ()] temporal * batch_size
+    :return:
+    """
 
+    for b in range(label_map.shape[0]):  # for each batch (person)
+        output = np.ones((50 * 2, 50 * temporal))  # cd .. temporal save a single image
+        seq = imgs[0][b].split('/')[-2]  # sequence name 001L0
+        img = ""  # all image name in the same seq
+        label_dict = {}  # all image label in the same seq
+        pck_dict = {}
+        for t in range(temporal):  # for each temporal
+            labels_list = []  # 21 points label for one image [[], [], [], .. ,[]]
 
+            im = imgs[t][b].split('/')[-1][1:5]  # image name 0005
+            img += '_' + im
+            pre = np.zeros((45, 45))  #
+            gth = np.zeros((45, 45))
+
+            # ****************** get pck of one image ************************
+            target = np.asarray(label_map[b, t, :, :, :].data)  # 3D numpy 21 * 45 * 45
+            predict = np.asarray(predict_heatmaps[t][b, :, :, :].data)  # 3D numpy 21 * 45 * 45
+            empty = np.zeros((21, 45, 45))
+
+            if not np.equal(empty, target).all():
+                pck = PCK(predict, target, sigma=0.04)
+                pck_dict[im] = pck
+
+            # ****************** save image and label of 21 joints ******************
+            for i in range(21):  # for each joint
+                gth += np.asarray(label_map[b, t, i, :, :].data)  # 2D
+                tmp_pre = np.asarray(predict_heatmaps[t][b, i, :, :].data)  # 2D
+                pre += tmp_pre
+
+                #  get label of original image
+                corr = np.where(tmp_pre == np.max(tmp_pre))
+                x = corr[0][0] * (256.0 / 45.0)
+                x = int(x)
+                y = corr[1][0] * (256.0 / 45.0)
+                y = int(y)
+                labels_list.append([x, y])  # save img label
+
+            output[0:45, 50 * t: 50 * t + 45] = gth  # save image
+            output[50:95, 50 * t: 50 * t + 45] = pre
+
+            label_dict[im] = labels_list  # save label
+
+        # calculate average PCK
+        avg_pck = sum(pck_dict.values()) / float(pck_dict.__len__())
+        print 'step ...%d ... PCK %f  ....' % (step, avg_pck)
+
+        # ****************** save image ******************
+        if not os.path.exists(save_dir + 'test'):
+            os.mkdir(save_dir + 'test')
+        scipy.misc.imsave(save_dir + 'test' + '/s' + str(step) + '_'
+                          + seq + img + '_' + str(round(avg_pck, 4)) + '.jpg', output)
+
+        # ****************** save label ******************
+        if not os.path.exists(os.path.join(save_dir, 'test_predict')):
+            os.mkdir(os.path.join(save_dir, 'test_predict'))
+
+        save_dir_label = os.path.join(save_dir, 'test_predict') + '/' + seq
+        if not os.path.exists(save_dir_label):
+            os.mkdir(save_dir_label)
+
+        json.dump(label_dict, open(save_dir_label + '/' + step, 'w'))
+        return pck_dict
 
 
 
