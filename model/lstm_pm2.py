@@ -7,6 +7,24 @@ import torch.nn.functional as F
 import torch
 
 
+class Conv_Net3(nn.Module):
+    def __init__(self):
+        super(Conv_Net3, self).__init__()
+        self.Mconv1_convnet3 = nn.Conv2d(48, 128, kernel_size=11, padding=5)
+        self.Mconv2_convnet3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
+        self.Mconv3_convnet3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
+        self.Mconv4_convnet3 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
+        self.Mconv5_convnet3 = nn.Conv2d(128, self.outclass, kernel_size=1, padding=0)
+
+    def forward(self, input):
+        x = F.relu(self.Mconv1_convnet3(input))  # output 128 * 45 * 45
+        x = F.relu(self.Mconv2_convnet3(x))  # output 128 * 45 * 45
+        x = F.relu(self.Mconv3_convnet3(x))  # output 128 * 45 * 45
+        x = F.relu(self.Mconv4_convnet3(x))  # output 128 * 45 * 45
+        x = self.Mconv5_convnet3(x)  # output (class+1) * 45 * 45
+        return x  # heatmap (class+1) * 45 * 45
+
+
 class LSTM_PM(nn.Module):
 
     def __init__(self, outclass=21, T=7):

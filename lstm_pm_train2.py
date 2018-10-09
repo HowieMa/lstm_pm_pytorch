@@ -101,6 +101,7 @@ def train():
 
             # ******************** save training heat maps per 100 steps ********************
             if step % 100 == 0:
+                predict_heatmaps = predict_heatmaps[1:]
                 save_images(label_map, predict_heatmaps, step, epoch, imgs, train=True, temporal=model_temporal)
 
             # backward
