@@ -161,7 +161,7 @@ def Tests_save_label_imgs(label_map, predict_heatmaps, step, imgs, temporal=13, 
 
             if not np.equal(empty, target).all():
                 pck = PCK(predict, target, sigma=0.04)
-                pck_dict[im] = pck
+                pck_dict[seq + '_' + im] = pck
 
             # ****************** save image and label of 21 joints ******************
             for i in range(21):  # for each joint
@@ -183,6 +183,7 @@ def Tests_save_label_imgs(label_map, predict_heatmaps, step, imgs, temporal=13, 
             label_dict[im] = labels_list  # save label
 
         # calculate average PCK
+        # print pck_dict
         avg_pck = sum(pck_dict.values()) / float(pck_dict.__len__())
         print 'step ...%d ... PCK %f  ....' % (step, avg_pck)
 
@@ -200,7 +201,7 @@ def Tests_save_label_imgs(label_map, predict_heatmaps, step, imgs, temporal=13, 
         if not os.path.exists(save_dir_label):
             os.mkdir(save_dir_label)
 
-        json.dump(label_dict, open(save_dir_label + '/' + step, 'w'))
+        json.dump(label_dict, open(save_dir_label + '/' + str(step), 'w'))
         return pck_dict
 
 

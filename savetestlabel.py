@@ -5,6 +5,7 @@ from src.utils import *
 
 import argparse
 import pandas as pd
+import json
 
 import os
 import torch
@@ -28,11 +29,12 @@ args = parser.parse_args()
 # hyper parameter
 temporal = 5
 sample = 2
-model_temporal = temporal * (sample + 1) - sample
+model_temporal = temporal * (sample + 1) - sample  # 13
 
-test_data_dir = '/mnt/data/haoyum/UCIHand/test/test_data'
-test_full_data = '/mnt/data/haoyum/UCIHand/test/test_full_data'
-test_label_dir = '/mnt/data/haoyum/UCIHand/test/test_label'
+test_data_dir = '/home/haoyum/UCIHand/test/test_data'
+test_full_data = '/home/haoyum/UCIHand/test/test_full_data'
+test_label_dir = '/home/haoyum/UCIHand/test/test_label'
+
 model_epo = 35
 sigma = 0.04
 
@@ -64,7 +66,7 @@ print '********* test data *********'
 net = load_model(model_epo)
 net.eval()
 
-label_dict = {}  #
+all_pcks = {}  #
 for step, (images, label_map, center_map, empty, imgs) in enumerate(test_dataset):
 
     images = Variable(images.cuda() if args.cuda else images)           # 4D Tensor
@@ -80,12 +82,14 @@ for step, (images, label_map, center_map, empty, imgs) in enumerate(test_dataset
     pck_dict = Tests_save_label_imgs(label_map, predict_heatmaps, step,  imgs=imgs,
                     temporal=model_temporal)  # pck dict {0005:[[], [],[]]}
 
-    label_dict = dict(pck_dict.items() + label_dict.items())
+    all_pcks = dict(pck_dict.items() + all_pcks.items())
 
 print 'sigma ==========> ' + str(sigma)
-print '===PCK evaluation in test dataset is ' + str(sum(label_dict.values()) / label_dict.__len__())
+print '===PCK evaluation in test dataset is ' + str(sum(all_pcks.values()) / all_pcks.__len__())
 
 
+df = pd.DataFrame(list(all_pcks.items()), columns=['img', 'pck'])
+df.to_csv('ckpt/img_pck.csv')
 
 
 
