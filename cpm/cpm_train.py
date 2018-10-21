@@ -2,8 +2,8 @@
 
 from cpm import CPM
 from handpose_data_cpm import UCIHandPoseDataset
-from src.utils import *
 
+import os
 import torch
 import torch.optim as optim
 import torch.nn as nn
@@ -24,10 +24,10 @@ train_data_dir = config.get('data', 'train_data_dir')
 train_label_dir = config.get('data', 'train_label_dir')
 save_dir = config.get('data', 'save_dir')
 
-learning_rate = config.get('training', 'learning_rate')
-batch_size = config.get('training', 'batch_size')
-epochs = config.get('training', 'epochs')
-begin_epoch = config.get('training', 'begin_epoch')
+learning_rate = config.getfloat('training', 'learning_rate')
+batch_size = config.getint('training', 'batch_size')
+epochs = config.getint('training', 'epochs')
+begin_epoch = config.getint('training', 'begin_epoch')
 
 cuda = torch.cuda.is_available()
 

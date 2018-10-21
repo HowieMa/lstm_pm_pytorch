@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be0a499d-b697-432a-950a-cd0ac458330b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpm_train.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/handpose_data_cpm.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/cpm.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/lstm_pm2.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/lstm_pm2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpm/cpm_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/cpm/cpm_train.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -55,8 +51,8 @@
       <file leaf-file-name="cpm_train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cpm/cpm_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="446">
-              <caret line="92" lean-forward="true" selection-start-line="92" selection-end-line="92" />
+            <state relative-caret-position="258">
+              <caret line="26" column="32" selection-start-line="26" selection-start-column="32" selection-end-line="26" selection-end-column="32" />
               <folding>
                 <element signature="e#50#69#0" expanded="true" />
               </folding>
@@ -752,8 +748,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cpm/cpm_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="92" lean-forward="true" selection-start-line="92" selection-end-line="92" />
+        <state relative-caret-position="258">
+          <caret line="26" column="32" selection-start-line="26" selection-start-column="32" selection-end-line="26" selection-end-column="32" />
           <folding>
             <element signature="e#50#69#0" expanded="true" />
           </folding>
