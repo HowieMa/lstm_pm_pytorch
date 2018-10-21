@@ -5,7 +5,7 @@ from torch.utils.data import Dataset
 import numpy as np
 import json
 from PIL import Image
-
+import scipy.misc
 
 class UCIHandPoseDataset(Dataset):
 
@@ -30,7 +30,7 @@ class UCIHandPoseDataset(Dataset):
         :return:
         """
 
-        for seq in self.seqs:
+        for seq in self.seqs:               # 001L0
             if seq == '.DS_Store':
                 continue
             image_path = os.path.join(self.data_dir, seq)  #
@@ -53,9 +53,9 @@ class UCIHandPoseDataset(Dataset):
         """
 
         label_size = self.width / 8 - 1         # 45
-        img = self.images_dir[idx]           # # '.../001L0/L0005.jpg'
+        img = self.images_dir[idx]              # '.../001L0/L0005.jpg'
 
-        seq = img.split('/')[-2]            # 001L0
+        seq = img.split('/')[-2]                # 001L0
         label_path = os.path.join(self.label_dir, seq)
         labels = json.load(open(label_path + '.json'))
 
@@ -76,7 +76,6 @@ class UCIHandPoseDataset(Dataset):
         center_map = self.genCenterMap(x=self.width / 2.0, y=self.height / 2.0, sigma=21,
                                        size_w=self.width, size_h=self.height)
         center_map = torch.from_numpy(center_map)
-        center_map = center_map.unsqueeze_(0)
 
         return image.float(), label_maps.float(), center_map.float(), img
 
@@ -120,19 +119,35 @@ class UCIHandPoseDataset(Dataset):
         return label_maps  # numpy           label_size * label_size * (joints + 1)
 
 
-## test case
-# data = UCIHandPoseDataset(data_dir='/Users/mahaoyu/UCI/HandsPoseDataset/train/train_data',
-#                           label_dir='/Users/mahaoyu/UCI/HandsPoseDataset/train/train_label')
-#
-# img, label, center, name = data[1]
-#
-# print img.shape
-# print label.shape
-# print center.shape
-# print name
-#
-#
-# lab = np.asarray(label)
-# out = np.zeros(((45, 45)))
-# for i in range(21):
-#     out += lab[i,:, :]
+# test case
+if __name__ == "__main__":
+    data_dir = '../dataset/train_data'
+    label_dir = '../dataset/train_label'
+    data = UCIHandPoseDataset(data_dir=data_dir, label_dir=label_dir)
+
+    img, label, center, name = data[1]
+
+    print img.shape         # 3D Tensor 3 * 368 * 368
+    print label.shape       # 3D Tensor 21 * 45 * 45
+    print center.shape      # 2D Tensor 368 * 368
+    print name
+
+    # ***************** draw label map *****************
+    lab = np.asarray(label)
+    out_labels = np.zeros(((45, 45)))
+    for i in range(21):
+        out_labels += lab[i, :, :]
+    scipy.misc.imsave('label.jpg', out_labels)
+
+    # ***************** draw image *****************
+    im_size = 368
+    target = Image.new('RGB', (im_size, im_size))
+    left = 0
+    right = im_size
+    img = transforms.ToPILImage()(img)
+    target.paste(img, (left, 0, right, im_size))
+
+    target.save('img.jpg')
+
+    labelss = torch.stack([label]*6, dim=1)
+    print labelss.shape

@@ -10,38 +10,51 @@ class CPM(nn.Module):
         self.img_w = 368
         self.out_c = out_c
         self.pool_center_lower = nn.AvgPool2d(kernel_size=9, stride=8)
+
+        # ******************* Stage 1 *******************
+        # ConvNet 1
         self.conv1_stage1 = nn.Conv2d(3, 128, kernel_size=9, padding=4)
         self.pool1_stage1 = nn.MaxPool2d(kernel_size=3, stride=2)
         self.conv2_stage1 = nn.Conv2d(128, 128, kernel_size=9, padding=4)
         self.pool2_stage1 = nn.MaxPool2d(kernel_size=3, stride=2)
         self.conv3_stage1 = nn.Conv2d(128, 128, kernel_size=9, padding=4)
         self.pool3_stage1 = nn.MaxPool2d(kernel_size=3, stride=2)
+
         self.conv4_stage1 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
         self.conv5_stage1 = nn.Conv2d(32, 512, kernel_size=9, padding=4)
         self.conv6_stage1 = nn.Conv2d(512, 512, kernel_size=1)
         self.conv7_stage1 = nn.Conv2d(512, self.out_c + 1, kernel_size=1)
 
+        # ******************* Stage 2 *******************
+        # ConvNet 2 (middle)
         self.conv1_stage2 = nn.Conv2d(3, 128, kernel_size=9, padding=4)
         self.pool1_stage2 = nn.MaxPool2d(kernel_size=3, stride=2)
         self.conv2_stage2 = nn.Conv2d(128, 128, kernel_size=9, padding=4)
         self.pool2_stage2 = nn.MaxPool2d(kernel_size=3, stride=2)
         self.conv3_stage2 = nn.Conv2d(128, 128, kernel_size=9, padding=4)
         self.pool3_stage2 = nn.MaxPool2d(kernel_size=3, stride=2)
-        self.conv4_stage2 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
+
+        # ******************* Stage 2 *******************
+        self.conv4_stage2 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
+        # ConvNet 3
         self.Mconv1_stage2 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
         self.Mconv2_stage2 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_stage2 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_stage2 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
         self.Mconv5_stage2 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
 
+        # ******************* Stage 3 *******************
         self.conv1_stage3 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
+        #ConvNet 3
         self.Mconv1_stage3 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
         self.Mconv2_stage3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_stage3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_stage3 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
         self.Mconv5_stage3 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
+
+        # ******************* Stage 4 *******************
 
         self.conv1_stage4 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
@@ -51,6 +64,7 @@ class CPM(nn.Module):
         self.Mconv4_stage4 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
         self.Mconv5_stage4 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
 
+        # ******************* Stage 5 *******************
         self.conv1_stage5 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
         self.Mconv1_stage5 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
@@ -59,6 +73,7 @@ class CPM(nn.Module):
         self.Mconv4_stage5 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
         self.Mconv5_stage5 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
 
+        # ******************* Stage 6 *******************
         self.conv1_stage6 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
         self.Mconv1_stage6 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
@@ -104,6 +119,7 @@ class CPM(nn.Module):
         :return: Mconv5_stage2_map
         """
         x = F.relu(self.conv4_stage2(pool3_stage2_map))
+
         x = torch.cat([x, conv7_stage1_map, pool_center_lower_map], dim=1)
         x = F.relu(self.Mconv1_stage2(x))
         x = F.relu(self.Mconv2_stage2(x))
@@ -223,5 +239,11 @@ def mse_loss(pred_6, target, weight=None, weighted_loss=False, size_average=True
     return loss
 
 
+if __name__ == "__main__":
+    net = CPM(out_c=20)
 
+    x = torch.randn(2, 3, 368, 368)  # batch size = 2
+    c = torch.randn(2, 368, 368)  # batch size = 2
+    y = net(x, c)
+    print y.shape  # torch (2, 6, 21, 45, 45)
 

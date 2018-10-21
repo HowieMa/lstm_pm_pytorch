@@ -7,16 +7,73 @@ import torch.nn.functional as F
 import torch
 
 
-class Conv_Net3(nn.Module):
+class ConvNet1(nn.Module):
+    def __init__(self, outc):
+        super(ConvNet1, self).__init__()
+        self.conv1_convnet1 = nn.Conv2d(3, 128, kernel_size=9, padding=4)  # 3 * 368 * 368
+        self.pool1_convnet1 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.conv2_convnet1 = nn.Conv2d(128, 128, kernel_size=9, padding=4)
+        self.pool2_convnet1 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.conv3_convnet1 = nn.Conv2d(128, 128, kernel_size=9, padding=4)
+        self.pool3_convnet1 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.conv4_convnet1 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
+        self.conv5_convnet1 = nn.Conv2d(32, 512, kernel_size=9, padding=4)
+        self.conv6_convnet1 = nn.Conv2d(512, 512, kernel_size=1)
+        self.conv7_convnet1 = nn.Conv2d(512, self.outclass, kernel_size=1)  # 512 * 45 * 45
+        self.outclass = outc
+
+    def forward(self, image):
+        """
+        :param image: 3 * 368 * 368
+        :return: initial_heatmap out_class * 45 * 45
+        """
+        x = self.pool1_convnet1(F.relu(self.conv1_convnet1(image)))  # output 128 * 184 * 184
+        x = self.pool2_convnet1(F.relu(self.conv2_convnet1(x)))  # output 128 * 92 * 92
+        x = self.pool3_convnet1(F.relu(self.conv3_convnet1(x)))  # output 128 * 45 * 45
+        x = F.relu(self.conv4_convnet1(x))  # output 32 * 45 * 45
+        x = F.relu(self.conv5_convnet1(x))  # output 512 * 45 * 45
+        x = F.relu(self.conv6_convnet1(x))  # output 512 * 45 * 45
+        initial_heatmap = self.conv7_convnet1(x)  # output (class + 1) * 45 * 45
+        return initial_heatmap
+
+
+class ConvNet2(nn.Module):
     def __init__(self):
-        super(Conv_Net3, self).__init__()
+        super(ConvNet2, self).__init__()
+        self.conv1_convnet2 = nn.Conv2d(3, 128, kernel_size=9, padding=4)  # 3 * 368 * 368
+        self.pool1_convnet2 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.conv2_convnet2 = nn.Conv2d(128, 128, kernel_size=9, padding=4)  # 128 * 184 * 184
+        self.pool2_convnet2 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.conv3_convnet2 = nn.Conv2d(128, 128, kernel_size=9, padding=4)  # 128 * 92 * 92
+        self.pool3_convnet2 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.conv4_convnet2 = nn.Conv2d(128, 32, kernel_size=5, padding=2)  # 32 * 45 * 45
+
+    def forward(self, image):
+        """
+        :param image: 3 * 368 * 368
+        :return: Fs(.) features 32 * 45 * 45
+        """
+        x = self.pool1_convnet2(F.relu(self.conv1_convnet2(image)))  # output 128 * 184 * 184
+        x = self.pool2_convnet2(F.relu(self.conv2_convnet2(x)))  # output 128 * 92 * 92
+        x = self.pool3_convnet2(F.relu(self.conv3_convnet2(x)))  # output 128 * 45 * 45
+        x = F.relu(self.conv4_convnet2(x))  # output 32 * 45 * 45
+
+
+class ConvNet3(nn.Module):
+    def __init__(self, outc):
+        super(ConvNet3, self).__init__()
         self.Mconv1_convnet3 = nn.Conv2d(48, 128, kernel_size=11, padding=5)
         self.Mconv2_convnet3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_convnet3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_convnet3 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
         self.Mconv5_convnet3 = nn.Conv2d(128, self.outclass, kernel_size=1, padding=0)
+        self.outclass = outc
 
     def forward(self, input):
+        """
+        :param input: 48 * 45 * 45
+        :return:
+        """
         x = F.relu(self.Mconv1_convnet3(input))  # output 128 * 45 * 45
         x = F.relu(self.Mconv2_convnet3(x))  # output 128 * 45 * 45
         x = F.relu(self.Mconv3_convnet3(x))  # output 128 * 45 * 45
@@ -25,8 +82,37 @@ class Conv_Net3(nn.Module):
         return x  # heatmap (class+1) * 45 * 45
 
 
-class LSTM_PM(nn.Module):
+class LSTM0(nn.Module):
+    def __init__(self, outc):
+        super(LSTM0, self).__init__()
+        self.conv_gx_lstm0 = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1)
+        self.conv_ix_lstm0 = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1)
+        self.conv_ox_lstm0 = nn.Conv2d(32 + 1 + self.outclass, 48, kernel_size=3, padding=1)
+        self.outclass = outc
 
+    def forward(self, x):
+        gx = self.conv_gx_lstm0(x)
+        ix = self.conv_ix_lstm0(x)
+        ox = self.conv_ox_lstm0(x)
+
+        gx = F.tanh(gx)
+        ix = F.sigmoid(ix)
+        ox = F.sigmoid(ox)
+
+        cell1 = F.tanh(gx * ix)
+        hide_1 = ox * cell1
+        return cell1, hide_1
+
+
+class LSTMPoseMachine(nn.Module):
+    def __init__(self, outclass=21, T=5):
+        super(LSTMPoseMachine, self).__init__()
+        self.outclass = outclass
+        self.T = 5
+        self.stage1 = ConvNet1(outclass)
+
+
+class LSTM_PM(nn.Module):
     def __init__(self, outclass=21, T=7):
         super(LSTM_PM, self).__init__()
         self.outclass = outclass
@@ -228,10 +314,11 @@ class LSTM_PM(nn.Module):
 
 # test case
 if __name__ == '__main__':
-    net = LSTM_PM(T=4)
-    a = torch.randn(4, 3, 368, 368)
-    c = torch.randn(1, 368, 368)
-    maps = net(a, c)
-    for m in maps:
-        print m.shape
+    Conv_Net3()
+    # net = LSTM_PM(T=4)
+    # a = torch.randn(4, 3, 368, 368)
+    # c = torch.randn(1, 368, 368)
+    # maps = net(a, c)
+    # for m in maps:
+    #     print m.shape
 
