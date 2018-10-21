@@ -23,7 +23,7 @@ class CPM(nn.Module):
         self.conv4_stage1 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
         self.conv5_stage1 = nn.Conv2d(32, 512, kernel_size=9, padding=4)
         self.conv6_stage1 = nn.Conv2d(512, 512, kernel_size=1)
-        self.conv7_stage1 = nn.Conv2d(512, self.out_c + 1, kernel_size=1)
+        self.conv7_stage1 = nn.Conv2d(512, self.out_c, kernel_size=1)
 
         # ******************* Stage 2 *******************
         # ConvNet 2 (middle)
@@ -38,49 +38,49 @@ class CPM(nn.Module):
         # ******************* Stage 2 *******************
         self.conv4_stage2 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
         # ConvNet 3
-        self.Mconv1_stage2 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
+        self.Mconv1_stage2 = nn.Conv2d(32 + self.out_c + 1, 128, kernel_size=11, padding=5)
         self.Mconv2_stage2 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_stage2 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_stage2 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
-        self.Mconv5_stage2 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
+        self.Mconv5_stage2 = nn.Conv2d(128, self.out_c, kernel_size=1, padding=0)
 
         # ******************* Stage 3 *******************
         self.conv1_stage3 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
         #ConvNet 3
-        self.Mconv1_stage3 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
+        self.Mconv1_stage3 = nn.Conv2d(32 + self.out_c + 1, 128, kernel_size=11, padding=5)
         self.Mconv2_stage3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_stage3 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_stage3 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
-        self.Mconv5_stage3 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
+        self.Mconv5_stage3 = nn.Conv2d(128, self.out_c, kernel_size=1, padding=0)
 
         # ******************* Stage 4 *******************
 
         self.conv1_stage4 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
-        self.Mconv1_stage4 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
+        self.Mconv1_stage4 = nn.Conv2d(32 + self.out_c + 1, 128, kernel_size=11, padding=5)
         self.Mconv2_stage4 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_stage4 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_stage4 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
-        self.Mconv5_stage4 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
+        self.Mconv5_stage4 = nn.Conv2d(128, self.out_c , kernel_size=1, padding=0)
 
         # ******************* Stage 5 *******************
         self.conv1_stage5 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
-        self.Mconv1_stage5 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
+        self.Mconv1_stage5 = nn.Conv2d(32 + self.out_c + 1, 128, kernel_size=11, padding=5)
         self.Mconv2_stage5 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_stage5 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_stage5 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
-        self.Mconv5_stage5 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
+        self.Mconv5_stage5 = nn.Conv2d(128, self.out_c , kernel_size=1, padding=0)
 
         # ******************* Stage 6 *******************
         self.conv1_stage6 = nn.Conv2d(128, 32, kernel_size=5, padding=2)
 
-        self.Mconv1_stage6 = nn.Conv2d(32 + self.out_c + 2, 128, kernel_size=11, padding=5)
+        self.Mconv1_stage6 = nn.Conv2d(32 + self.out_c + 1, 128, kernel_size=11, padding=5)
         self.Mconv2_stage6 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv3_stage6 = nn.Conv2d(128, 128, kernel_size=11, padding=5)
         self.Mconv4_stage6 = nn.Conv2d(128, 128, kernel_size=1, padding=0)
-        self.Mconv5_stage6 = nn.Conv2d(128, self.out_c + 1, kernel_size=1, padding=0)
+        self.Mconv5_stage6 = nn.Conv2d(128, self.out_c , kernel_size=1, padding=0)
 
     def _stage1(self, image):
         """
@@ -240,7 +240,7 @@ def mse_loss(pred_6, target, weight=None, weighted_loss=False, size_average=True
 
 
 if __name__ == "__main__":
-    net = CPM(out_c=20)
+    net = CPM(out_c=21)
 
     x = torch.randn(2, 3, 368, 368)  # batch size = 2
     c = torch.randn(2, 368, 368)  # batch size = 2
